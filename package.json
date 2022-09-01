@@ -1,0 +1,25 @@
+{
+  "name": "elearning-backend",
+  "version": "1.0.0",
+  "description": "NodeJS backend for ITF eLearning app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NECA-ITF/eLearning-backend.git"
+  },
+  "author": "ITF-NECA-TRAINEES",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NECA-ITF/eLearning-backend/issues"
+  },
+  "homepage": "https://github.com/NECA-ITF/eLearning-backend#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
