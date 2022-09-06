@@ -4,7 +4,8 @@ const { Schema, model } = mongoose;
 const courseSchema = new Schema({
     title: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
 
     instructor: {
@@ -25,7 +26,7 @@ const courseSchema = new Schema({
       default: 0
     },
     rating: {
-      type: String
+      type: [String]
     }
   }, { timestamps: true });
   
