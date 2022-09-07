@@ -1,0 +1,65 @@
+{
+    "courseId": "63176397e57120944955872d",
+    "outlineId": "6318847f38af15abc74e4b8c",
+    "videos": [
+        {
+        "title": "Part45",
+        "url": "http://localhost:5000/VictorCG/getVideo5"
+        }
+    ]
+}
+
+{
+    "courseId": "63176397e57120944955872d",
+    "outlineId": "6318847f38af15abc74e4b8c",
+    "videos": [
+        {
+        "title": "Part5",
+        "url": "http://localhost:5000/VictorCG/getVideo5"
+        },
+                {
+        "title": "Part6",
+        "url": "http://localhost:5000/VictorCG/getVideo6"
+        }
+    ]
+}
+
+{
+    "courseId": "63176397e57120944955872d",
+    "outlineId": "6318847f38af15abc74e4b8c",
+    "videos": [
+        {
+        "title": "Part35",
+        "url": "http://localhost:5000/VictorCG/getVideo5"
+        }
+    ]
+}
+
+{
+    "courseId": "63176397e57120944955872d",
+    "outlineId": "6318847f38af15abc74e4b8c",
+    "videos": [
+        {
+        "title": "Part3",
+        "url": "http://localhost:5000/VictorCG/getVideo3"
+        },
+                {
+        "title": "Part4",
+        "url": "http://localhost:5000/VictorCG/getVideo4"
+        }
+    ]
+}
+
+------------------------------------------------------------------..................................................................------------------------------------------------------------------
+//outlines
+{
+    "courseId": "63176397e57120944955872d",
+    "outlines": [
+        {
+            "title": "Intro"
+        },
+        {
+            "title": "middle"
+        }
+    ]
+}
