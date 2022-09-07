@@ -2,7 +2,6 @@ const CourseModel = require('../model/course.model')
 const OutlineModel = require('../model/outline.model')
 const VideoModel = require('../model/video.model')
 
-//Creating a new course
 async function handleNewCourse(req, res){
     try {
         const data = req.body
@@ -15,6 +14,7 @@ async function handleNewCourse(req, res){
             message:"Course created successfully"
         })
     } catch (error) {
+        console.log(error)
         res.status(400).json({
             success: false,
             message:"Something has gone wrong",
@@ -36,7 +36,7 @@ async function handleNewOutline(req, res){
             message:"Course created successfully"
         })
     } catch (error) {
-        console.log(error)
+
         res.status(400).json({
             success: false,
             message:"Something has gone wrong",
@@ -44,6 +44,7 @@ async function handleNewOutline(req, res){
         })
     }
 }
+
 
 //----------------------------------------------------------------
 //................................................................
@@ -93,4 +94,33 @@ async function handleGetVideos(req, res) {
 
 
 
-module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handleGetVideos };
+// module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handleGetVideos };
+
+
+
+async function handeleGetCourses(req, res) {
+    const courses = await CourseModel.find()
+    res.status(200).json({
+      message: "Successful!",
+      success: true,
+      courses,
+      statusCode: 200
+    });
+  }
+
+  async function handeleGetOutlines(req, res) {
+    const courseId = req.params.id;
+    const outlines = await OutlineModel.findOne({ courseId: courseId})
+    res.status(200).json({
+      message: "Successful!",
+      success: true,
+      outlines,
+      statusCode: 200
+    });
+  }
+
+  
+
+
+
+module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handeleGetCourses, handeleGetOutlines, handleGetVideos };
