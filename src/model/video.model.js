@@ -6,22 +6,22 @@ const videoSchema = new Schema({
       type: String,
       required: true 
     },
-    outlinesId: {
+    outlineId: {
       type: String,
       required: true 
     }, 
     videos: [
-          {
-            outlineId: {
-              type: String,
-              required: true 
-            } ,   
-            url: {
-              type: String,
-              required: true,
-              unique: true 
-            }
-          }
+      {
+        title: {
+          type: String,
+          required: true,
+          unique: true 
+        },
+        url: {
+          type: String,
+          required: true 
+        }
+      }
     ] 
   });
   

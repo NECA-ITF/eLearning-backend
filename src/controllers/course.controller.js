@@ -50,13 +50,15 @@ async function handleNewVideo(req, res){
         const data = req.body
         let resData = new videoModel(data)
         resData = await resData.save()
+        console.log(resData._id);
         res.status(201).json({
             success: true,
-            data,
+            resData,
             statusCode: 201,
             message:"Course created successfully"
         })
     } catch (error) {
+        console.log(error)
         res.status(400).json({
             success: false,
             message:"Something has gone wrong",
