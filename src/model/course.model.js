@@ -27,5 +27,8 @@ const courseSchema = new Schema({
     rating: String
   }, { timestamps: true });
   
+
+  
+  
   
   module.exports = model('Course', courseSchema);
