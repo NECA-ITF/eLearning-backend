@@ -13,7 +13,7 @@ async function handleNewCourse(req, res){
             message:"Course created successfully"
         })
     } catch (error) {
-        console.log(object)
+        console.log(error)
         res.status(400).json({
             success: false,
             message:"Something has gone wrong",
