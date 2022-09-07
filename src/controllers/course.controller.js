@@ -83,12 +83,21 @@ async function handeleGetCourses(req, res) {
   async function handeleGetOutlines(req, res) {
     const courseId = req.params.id;
     const outlines = await OutlineModel.findOne({ courseId: courseId})
-    res.status(200).json({
-      message: "Successful!",
-      success: true,
-      outlines,
-      statusCode: 200
+    if(outlines){
+        return res.status(200).json({
+            message: "Successful!",
+            success: true,
+            outlines,
+            statusCode: 200
+        });
+    }
+
+    res.status(404).json({
+        message: "Course not found!",
+        success: false,
+        statusCode: 404
     });
+    
   }
 
   
