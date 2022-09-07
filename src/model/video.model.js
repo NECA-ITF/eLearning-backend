@@ -4,25 +4,32 @@ const { Schema, model } = mongoose;
 const videoSchema = new Schema({
     courseId: {
       type: String,
-      required: true 
+      required: true,
+      unique: true 
     },
     outlinesId: {
       type: String,
-      required: true 
+      required: true,
+      unique: true 
+    },
+    outlineId: {
+      type: String,
+      required: true,
+      unique: true 
     }, 
     videos: [
-          {
-            outlineId: {
-              type: String,
-              required: true 
-            } ,   
-            url: {
-              type: String,
-              required: true,
-              unique: true 
-            }
-          }
-    ] 
+      {
+        title: {
+          type: String,
+          required: true,
+          unique: true 
+        },
+        url: {
+          type: String,
+          required: true 
+        }
+      }
+    ]
   });
   
   

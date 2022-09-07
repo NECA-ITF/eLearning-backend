@@ -20,20 +20,4 @@ const outlineSchema = new Schema({
 
 
   
-  module.exports = model('Outline', outlineSchema);
-
-
-
-
-
-  
-//   outlines: {
-//     type: [Object],
-//     required:true,
-//     title: {
-//         type: String,
-//         required: true,
-//         unique: true                
-//     }
-
-// }
+module.exports = model('Outline', outlineSchema);
