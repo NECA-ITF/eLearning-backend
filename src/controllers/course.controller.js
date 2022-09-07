@@ -81,7 +81,8 @@ async function handeleGetCourses(req, res) {
   }
 
   async function handeleGetOutlines(req, res) {
-    const outlines = await OutlineModel.find()
+    const courseId = req.params.id;
+    const outlines = await OutlineModel.findOne({ courseId: courseId})
     res.status(200).json({
       message: "Successful!",
       success: true,
