@@ -9,7 +9,7 @@ async function handleNewCourse(req, res){
         resData = await resData.save()
         res.status(201).json({
             success: true,
-            data,
+            resData,
             statusCode: 201,
             message:"Course created successfully"
         })
@@ -26,16 +26,18 @@ async function handleNewCourse(req, res){
 
 async function handleNewOutline(req, res){
     try {
-        const data = req.body
+        const data = req.body;
+        
         let resData = new OutlineModel(data)
         resData = await resData.save()
         res.status(201).json({
             success: true,
-            data,
+            resData,
             statusCode: 201,
             message:"Course created successfully"
         })
     } catch (error) {
+        // console.log(error);
         res.status(400).json({
             success: false,
             message:"Something has gone wrong",
@@ -46,11 +48,22 @@ async function handleNewOutline(req, res){
 
 
 async function handleNewVideo(req, res){
+    try{
+        const outlineExists = await OutlineModel.findOne({ _id: req.body.outlineId});
+    }
+    catch(error){
+        return res.status(404).json({
+            success: false,
+            statusCode: 404,
+            message:"Outline does not exist"
+        })
+    }
+    
     try {
         const data = req.body
+
         let resData = new VideoModel(data)
         resData = await resData.save()
-        console.log(resData._id);
         res.status(201).json({
             success: true,
             resData,
@@ -59,6 +72,7 @@ async function handleNewVideo(req, res){
         })
     } catch (error) {
         console.log(error)
+        
         res.status(400).json({
             success: false,
             message:"Something has gone wrong",
@@ -82,12 +96,12 @@ async function handeleGetCourses(req, res) {
 
   async function handeleGetOutlines(req, res) {
     const courseId = req.params.id;
-    const outlines = await OutlineModel.findOne({ courseId: courseId})
-    if(outlines){
+    const outline = await OutlineModel.findOne({ courseId: courseId})
+    if(outline){
         return res.status(200).json({
             message: "Successful!",
             success: true,
-            outlines,
+            outline,
             statusCode: 200
         });
     }
