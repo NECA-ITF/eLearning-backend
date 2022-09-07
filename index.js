@@ -3,10 +3,12 @@ const cors = require("cors");
 const app = express();
 const mongoose = require('mongoose')
 //const AuthRoute = require('./src/routes/auth.route');
-const CourseRoute = require('./src/routes/course.route');
+const authRoute = require('./src/routes/auth.route');
+const courseRoute = require('./src/routes/course.route');
 app.use(express.json());
 app.use(cors());
-app.use('/api', CourseRoute)
+app.use('/auth', authRoute)
+app.use('/api', courseRoute)
 app.get('/',(req,res)=>{
     res.send('HELLO WELCOME TO THE E-LEARNING APP BACKEND')
 })
