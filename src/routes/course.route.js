@@ -12,8 +12,8 @@ route.get("/outlines/:id", handeleGetOutlines)
 
 
 route.post("/newCourse", handleNewCourse)
-route.post("/newOutline", handleNewOutline)
-route.post("/newVideo", handleNewVideo)
+route.post("/newOutline/:id", handleNewOutline)
+route.post("/newVideo/:id", handleNewVideo)
 route.get("/getVideo/:id", handleGetVideos)
 
 module.exports = route;
