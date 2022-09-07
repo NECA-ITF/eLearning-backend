@@ -3,19 +3,24 @@ const { Schema, model } = mongoose;
 
 const videoSchema = new Schema({
     courseId: {
-      type: String
+      type: String,
+      required: true 
     },
-    outlineId: {
-      type: String 
-    },
-
+    outlinesId: {
+      type: String,
+      required: true 
+    }, 
     videos: [
-          {outlineId: {
-             type: String,
-             url: {type: String,
-                   required: true
+          {
+            outlineId: {
+              type: String,
+              required: true 
+            } ,   
+            url: {
+              type: String,
+              required: true,
+              unique: true 
             }
-          }          
           }
     ] 
   });

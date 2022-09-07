@@ -12,7 +12,7 @@ const courseSchema = new Schema({
         type: String,
         required: true
       },
-
+ 
     description: {
       type: String,
       required: true
@@ -23,7 +23,6 @@ const courseSchema = new Schema({
     },
     totalHours: {
       type: String
-
     },
     rating: {
       type: [String]

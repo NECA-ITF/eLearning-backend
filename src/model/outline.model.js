@@ -2,20 +2,20 @@ const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
 const outlineSchema = new Schema({
-    courseId: {
-      type: String
-    },
-
-    outlines: [
-            {title: {type: String,
-                    required: true,
-                    unique: true,                  
-            } 
-            }
-    ]
-
- 
-  });
+        courseId: {
+                type: String,
+                required: true
+        },
+        outlines: [
+                {
+                        title: {
+                                type: String,
+                                required: true,
+                                unique: true                  
+                        } 
+                }
+        ]
+});
   
   
   module.exports = model('Outline', outlineSchema);
