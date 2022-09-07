@@ -8,7 +8,7 @@ async function handleNewCourse(req, res){
         let resData = new CourseModel(data)
         resData = await resData.save()
         res.status(201).json({
-            success: true,
+            succss: true,
             data,
             statusCode: 201,
             message:"Course created successfully"
@@ -36,6 +36,7 @@ async function handleNewOutline(req, res){
             message:"Course created successfully"
         })
     } catch (error) {
+
         res.status(400).json({
             success: false,
             message:"Something has gone wrong",
@@ -45,6 +46,8 @@ async function handleNewOutline(req, res){
 }
 
 
+//----------------------------------------------------------------
+//................................................................
 async function handleNewVideo(req, res){
     try {
         const data = req.body
@@ -55,18 +58,43 @@ async function handleNewVideo(req, res){
             success: true,
             resData,
             statusCode: 201,
-            message:"Course created successfully"
+            message:"Video created successfully"
         })
     } catch (error) {
         console.log(error)
         res.status(400).json({
             success: false,
             message:"Something has gone wrong",
+            error: error.message,
             statusCode: 400
         })
     }
 }
 
+async function handleGetVideos(req, res) {
+    const outlineId = req.params.id
+    const videos = await VideoModel.findOne({outlineId:outlineId})
+    try {
+        console.log(videos)
+        res.status(201).json({
+            success: true,
+            videos,
+            statusCode: 200,
+            message:"Videos created successfully",
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+        success:false,
+        message: "seems we can't find what you are looking for",
+        statusCode: 400
+        })
+    }
+}
+
+
+
+// module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handleGetVideos };
 
 
 
@@ -104,4 +132,4 @@ async function handeleGetCourses(req, res) {
 
 
 
-module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handeleGetCourses, handeleGetOutlines };
+module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handeleGetCourses, handeleGetOutlines, handleGetVideos };
