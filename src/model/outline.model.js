@@ -7,8 +7,8 @@ const outlineSchema = new Schema({
         required: true,
         unique: true
     },
-    outline: [
-        {
+    outlines: [
+        {  
             title: {
                 type: String,
                 required: true,
@@ -20,4 +20,4 @@ const outlineSchema = new Schema({
 
 
   
-  module.exports = model('Outline', outlineSchema);
+module.exports = model('Outline', outlineSchema);

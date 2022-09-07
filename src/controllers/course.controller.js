@@ -16,60 +16,92 @@ async function handleNewCourse(req, res){
     } catch (error) {
         console.log(error)
         res.status(400).json({
+            message: "Something has gone wrong",
+            error,
             success: false,
-            message:"Something has gone wrong",
             statusCode: 400
         })
     }
 }
 
 
+
+
 async function handleNewOutline(req, res){
+    const { courseId } = req.body;    
+    const courseExists = await CourseModel.countDocuments({ _id: courseId });
+
+    if(!courseExists){
+        return res.status(404).json({
+            message: "course not found",
+            success: false,
+            statusCode: 404
+        });
+    }
+    
     try {
-        const data = req.body;
+        const data = req.body
         
-        let resData = new OutlineModel(data)
+        let resData = await new OutlineModel(data)
         resData = await resData.save()
         res.status(201).json({
             success: true,
             resData,
             statusCode: 201,
-            message:"Course created successfully"
+            message:"Outline created successfully"
         })
+        
     } catch (error) {
         res.status(400).json({
             success: false,
-            message:"Something has gone wrong",
+            message:"Something went wrong",
+            error: error,
             statusCode: 400
         })
     }
 }
 
-
-//----------------------------------------------------------------
-//................................................................
 async function handleNewVideo(req, res){
-    try{
-        const outlineExists = await OutlineModel.findOne({ _id: req.body.outlineId});
-    }
-    catch(error){
+    const { courseId, outlinesId, outlineId } = req.body;    
+    const courseExists = await CourseModel.countDocuments({ _id: courseId });
+
+    if(!courseExists){
         return res.status(404).json({
+            message: "course not found",
             success: false,
-            statusCode: 404,
-            message:"Outline does not exist"
-        })
+            statusCode: 404
+        });
+    }
+    const outlinesExist = await OutlineModel.countDocuments({ _id: outlinesId });
+    
+    if(!outlinesExist){
+        return res.status(404).json({
+            message: "outlines not found",
+            success: false,
+            statusCode: 404
+        });
     }
     
+    const outlines = await OutlineModel.findOne({ _id: outlinesId });
+
+    if(!outlines.outlines.find(outline => outline._id.toString() === outlineId )){
+        
+        return res.status(404).json({
+            message: "outline not found",
+            success: false,
+            statusCode: 404
+        });
+    }
+
     try {
         const data = req.body
-
         let resData = new VideoModel(data)
         resData = await resData.save()
         res.status(201).json({
             success: true,
             resData,
-            statusCode: 201,
-            message:"Video created successfully"
+            statusCode: 200,
+            message:"Video added successfully"
         })
     } catch (error) {
         console.log(error)
@@ -83,16 +115,80 @@ async function handleNewVideo(req, res){
     }
 }
 
-async function handleGetVideos(req, res) {
-    const outlineId = req.params.id
-    const videos = await VideoModel.findOne({outlineId:outlineId})
-    try {
-        console.log(videos)
-        res.status(201).json({
+
+async function handleGetCourses(req, res) {
+    try{
+        const courses = await CourseModel.find()
+        return res.status(200).json({
+            message: "Successful!",
             success: true,
-            videos,
+            courses,
+            statusCode: 200
+        });
+    }catch(error){
+        res.status(500).json({
+            message: "Internal server error",
+            success: false,
+            courses,
+            statusCode: 500
+        });
+    }
+  }
+
+  async function handleGetOutlines(req, res) {
+    const { courseId } = req.params;    
+    const outlineExists = await OutlineModel.countDocuments({ courseId: courseId });
+
+    if(!outlineExists){
+        return res.status(404).json({
+            message: "outline not found",
+            success: false,
+            statusCode: 404
+        });
+    }
+
+    try{
+        const outline = await OutlineModel.findOne({ courseId: courseId})
+
+        return res.status(200).json({
+            message: "Successful!",
+            success: true,
+            outline,
+            statusCode: 200
+        });
+    }catch(error){
+        res.status(500).json({
+            message: "Internal server error",
+            success: false,
+            error,
+            statusCode: 500
+        });
+    }
+  }
+
+
+  async function handleGetVideos(req, res) {
+    const { courseId, outlineId } = req.params;
+    
+    const videosExist = await VideoModel.countDocuments({ courseId: courseId, outlineId: outlineId });
+    
+    if(!videosExist){
+        return res.status(404).json({
+            message: "outline not found",
+            success: false,
+            statusCode: 404
+        });
+    }
+
+    const resData = await VideoModel.findOne({ courseId: courseId, outlineId: outlineId })
+
+    try {
+        console.log(resData)
+        res.status(200).json({
+            success: true,
+            resData,
             statusCode: 200,
-            message:"Videos created successfully",
+            message:"Videos gotten successfully",
         })
     } catch (error) {
         console.log(error)
@@ -102,46 +198,7 @@ async function handleGetVideos(req, res) {
         statusCode: 400
         })
     }
-}
-
-
-
-// module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handleGetVideos };
-
-
-
-async function handeleGetCourses(req, res) {
-    const courses = await CourseModel.find()
-    res.status(200).json({
-      message: "Successful!",
-      success: true,
-      courses,
-      statusCode: 200
-    });
   }
 
-  async function handeleGetOutlines(req, res) {
-    const courseId = req.params.id;
-    const outline = await OutlineModel.findOne({ courseId: courseId})
-    if(outline){
-        return res.status(200).json({
-            message: "Successful!",
-            success: true,
-            outline,
-            statusCode: 200
-        });
-    }
 
-    res.status(404).json({
-        message: "Course not found!",
-        success: false,
-        statusCode: 404
-    });
-    
-  }
-
-  
-
-
-
-module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handeleGetCourses, handeleGetOutlines, handleGetVideos };
+module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handleGetCourses, handleGetOutlines, handleGetVideos };
