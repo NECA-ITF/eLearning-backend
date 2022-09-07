@@ -24,9 +24,7 @@ const courseSchema = new Schema({
     totalHours: {
       type: String
     },
-    rating: {
-      type: [String]
-    }
+    rating: String
   }, { timestamps: true });
   
   

@@ -2,19 +2,19 @@ const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
 const outlineSchema = new Schema({
-        courseId: {
+    courseId: {
+       type: String,
+        required: true
+    },
+    outlines: [
+        {
+            title: {
                 type: String,
-                required: true
-        },
-        outlines: [
-                {
-                        title: {
-                                type: String,
-                                required: true,
-                                unique: true                  
-                        } 
-                }
-        ]
+                required: true,
+                unique: true                
+            } 
+        }
+    ]
 });
   
   
