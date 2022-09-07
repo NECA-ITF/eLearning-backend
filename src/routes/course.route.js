@@ -1,6 +1,9 @@
 const express = require("express");
 const route = express.Router();
-const { handleNewCourse, handleNewOutline, handleNewVideo } = require("../controllers/course.controller");
+const { handleNewCourse, handleNewOutline, handleNewVideo, handeleGetCourses, handeleGetOutlines } = require("../controllers/course.controller");
+
+route.get("/courses", handeleGetCourses)
+route.get("/outlines/:id", handeleGetOutlines)
 
 route.post("/newCourse", handleNewCourse)
 route.post("/newOutline", handleNewOutline)
