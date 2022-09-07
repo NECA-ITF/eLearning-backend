@@ -10,8 +10,7 @@ const videoSchema = new Schema({
       type: String,
       required: true 
     }, 
-    videos: {
-      type: [
+    videos: [
         {
           title: {
             type: String,
@@ -23,23 +22,8 @@ const videoSchema = new Schema({
             required: true 
           }
         }
-      ],
-      required: true
-    }
+      ]
   });
   
   
   module.exports = model('video', videoSchema);
-  // videos: [
-  //   {
-  //     title: {
-  //       type: String,
-  //       required: true,
-  //       unique: true 
-  //     },
-  //     url: {
-  //       type: String,
-  //       required: true 
-  //     }
-  //   }
-  // ] 
