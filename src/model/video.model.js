@@ -6,40 +6,24 @@ const videoSchema = new Schema({
       type: String,
       required: true 
     },
-    outlineId: {
+    outlinesId: {
       type: String,
       required: true 
     }, 
-    videos: {
-      type: [
-        {
-          title: {
-            type: String,
-            required: true,
-            unique: true 
-          },
-          url: {
-            type: String,
-            required: true 
+    videos: [
+          {
+            outlineId: {
+              type: String,
+              required: true 
+            } ,   
+            url: {
+              type: String,
+              required: true,
+              unique: true 
+            }
           }
-        }
-      ],
-      required: true
-    }
+    ] 
   });
   
   
   module.exports = model('video', videoSchema);
-  // videos: [
-  //   {
-  //     title: {
-  //       type: String,
-  //       required: true,
-  //       unique: true 
-  //     },
-  //     url: {
-  //       type: String,
-  //       required: true 
-  //     }
-  //   }
-  // ] 
