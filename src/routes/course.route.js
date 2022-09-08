@@ -7,7 +7,7 @@ const route = express.Router();
 
 const { handleNewCourse, handleNewOutline, handleNewVideo, handleGetCourses, handleGetOutlines, handleGetVideos  } = require("../controllers/course.controller");
 
-route.post("/courses", handleNewCourse)
+route.post("/course", handleNewCourse)
 route.post("/outlines", handleNewOutline)
 route.post("/videos", handleNewVideo)
 

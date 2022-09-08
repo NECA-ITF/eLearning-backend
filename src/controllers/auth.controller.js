@@ -15,12 +15,12 @@ async function handleRegister(req, res){
     }
 
     try{
-        let resData = await new userModel(data);
-        resData = await resData.save();
+        let newUser = new userModel(data);
+        newUser = await newUser.save();
         return res.status(201).json({
             message: "Successful!",
             success: true,
-            resData,
+            newUser,
             statusCode: 201
         });
     }catch(error){
@@ -42,7 +42,7 @@ async function handleLogin(req, res){
         // console.log(user)
         
         return res.status(200).json({
-            message: "Login unsuccessful",
+            message: "Login Successful",
             success: true,
             user,
             statusCode: 200
@@ -50,7 +50,7 @@ async function handleLogin(req, res){
     }catch(error){
         // console.log(error)
         res.status(404).json({
-            message: "user not found",
+            message: "Login Unsuccessful",
             success: false,
             error,
             statusCode: 404
