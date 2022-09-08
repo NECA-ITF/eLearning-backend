@@ -33,4 +33,4 @@ const videoSchema = new Schema({
   });
   
   
-  module.exports = model('video', videoSchema);
+  module.exports = model('Video', videoSchema);
