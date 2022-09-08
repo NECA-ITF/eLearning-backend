@@ -16,4 +16,5 @@ route.get("/courses", handleGetCourses)
 route.get("/outlines/:courseId", handleGetOutlines)
 route.get("/videos/:courseId/:outlineId", handleGetVideos)
 
+
 module.exports = route;
