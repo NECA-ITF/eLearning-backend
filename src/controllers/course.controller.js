@@ -231,7 +231,7 @@ async function handleGetCourses(req, res) {
             success: true,
             resData,
             statusCode: 200,
-            message:"Outline deleted",
+            message:"Outline Deleted",
         })
     } catch (error) {
         console.log(error)
