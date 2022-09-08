@@ -21,6 +21,10 @@ add all videos in a particular outline item i.e course -> outlineItem -> videos 
 
 delete a specific outline from the course(require courseId)
 
+delete a single video in an outline
+
+delete all videos in an outline
+
 AUTHENTICATION---------------------------------------------------------------------------------------
 
 Register a user

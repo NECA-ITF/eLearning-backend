@@ -5,7 +5,6 @@ const videoSchema = new Schema({
     courseId: {
       type: String,
       required: true,
-      unique: true 
     },
     outlinesId: {
       type: String,
@@ -22,7 +21,6 @@ const videoSchema = new Schema({
         title: {
           type: String,
           required: true,
-          unique: true 
         },
         url: {
           type: String,
