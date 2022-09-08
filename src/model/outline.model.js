@@ -4,10 +4,11 @@ const { Schema, model } = mongoose;
 const outlineSchema = new Schema({
     courseId: {
        type: String,
-        required: true
+        required: true,
+        unique: true
     },
     outlines: [
-        {
+        {  
             title: {
                 type: String,
                 required: true,
@@ -19,4 +20,4 @@ const outlineSchema = new Schema({
 
 
   
-  module.exports = model('Outline', outlineSchema);
+module.exports = model('Outline', outlineSchema);
