@@ -15,12 +15,12 @@ async function handleRegister(req, res){
     }
 
     try{
-        let resData = new userModel(data);
-        resData = await resData.save();
+        let newUser = new userModel(data);
+        newUser = await newUser.save();
         return res.status(201).json({
             message: "Successful!",
             success: true,
-            resData,
+            newUser,
             statusCode: 201
         });
     }catch(error){
