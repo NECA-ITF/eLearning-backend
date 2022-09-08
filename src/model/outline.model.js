@@ -7,7 +7,7 @@ const outlineSchema = new Schema({
         required: true,
         unique: true
     },
-    outlines: [
+    outlines:[
         {  
             title: {
                 type: String,

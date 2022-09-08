@@ -28,6 +28,8 @@ async function handleNewCourse(req, res){
 
 
 async function handleNewOutline(req, res){
+
+
     const { courseId } = req.body;    
     const courseExists = await CourseModel.countDocuments({ _id: courseId });
 
@@ -42,7 +44,7 @@ async function handleNewOutline(req, res){
     try {
         const data = req.body
         
-        let resData = await new OutlineModel(data)
+        let resData =  new OutlineModel(data)
         resData = await resData.save()
         res.status(201).json({
             success: true,
@@ -200,5 +202,55 @@ async function handleGetCourses(req, res) {
     }
   }
 
+  async function handleDeleteOutline(req,res){
 
-module.exports = { handleNewCourse, handleNewOutline, handleNewVideo, handleGetCourses, handleGetOutlines, handleGetVideos };
+    const { courseId, outlineId } = req.body;
+    const courseExist = await OutlineModel.countDocuments({ courseId: courseId});
+    if(!courseExist){
+        return res.status(404).json({
+            message: "Course not found",
+            success: false,
+            statusCode: 404
+        });
+    }
+
+    try { 
+        const course = await OutlineModel.findOne({courseId:courseId});
+
+        const filterdOutlines = course.outlines.filter((outline) =>
+            outline._id.toString() !== outlineId
+        )
+
+        const resData = await OutlineModel.replaceOne({courseId:courseId},
+            {
+                courseId:courseId,
+                outlines:filterdOutlines
+            })
+
+        res.status(200).json({
+            success: true,
+            resData,
+            statusCode: 200,
+            message:"Outline Deleted",
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+        success:false,
+        message: "seems we can't find what you are looking for",
+        statusCode: 400
+        })
+    }
+  }
+
+
+
+module.exports = { 
+    handleNewCourse, 
+    handleNewOutline, 
+    handleNewVideo, 
+    handleGetCourses, 
+    handleGetOutlines, 
+    handleGetVideos,
+    handleDeleteOutline
+};
