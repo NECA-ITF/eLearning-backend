@@ -215,9 +215,9 @@ async function handleGetCourses(req, res) {
     }
 
     try { 
-        const outlines = await OutlineModel.findOne({courseId:courseId});
+        const course = await OutlineModel.findOne({courseId:courseId});
 
-        const filterdOutlines = outlines.outlines.filter((outline) =>
+        const filterdOutlines = course.outlines.filter((outline) =>
             outline._id.toString() !== outlineId
         )
 
