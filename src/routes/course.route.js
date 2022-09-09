@@ -1,23 +1,21 @@
 const express = require("express");
 const route = express.Router();
 
-
-// const handleGetVideos = require("../controllers/getCourse.controller")
-
-
 const { 
     handleNewCourse, 
     handleNewOutline, 
-    handleNewVideo, 
+    handleNewVideos, 
     handleGetCourses, 
     handleGetOutlines, 
-    handleGetVideos,
-    handleDeleteOutline
+    handleGetVideos, 
+    handleDeleteCourse,
+    handleDeleteOutline, 
+    handleDeleteVideo
 } = require("../controllers/course.controller");
 
 route.post("/course", handleNewCourse)
 route.post("/outlines", handleNewOutline)
-route.post("/videos", handleNewVideo)
+route.post("/videos", handleNewVideos)
 
 
 route.get("/courses", handleGetCourses)
@@ -25,6 +23,8 @@ route.get("/outlines/:courseId", handleGetOutlines)
 route.get("/videos/:courseId/:outlineId", handleGetVideos)
 
 
-route.delete("/deleteOutline",handleDeleteOutline)
+route.delete("/course", handleDeleteCourse)
+route.delete("/outline", handleDeleteOutline)
+route.delete("/video", handleDeleteVideo)
 
 module.exports = route;

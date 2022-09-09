@@ -38,13 +38,13 @@ async function handleRegister(req, res){
 async function handleLogin(req, res){
     const data = req.body;
     try{
-        const user = await userModel.findOne({ email: data.email, password: data.password})
-        // console.log(user)
+        const userData = await userModel.findOne({ email: data.email, password: data.password})
+        // console.log(userData)
         
         return res.status(200).json({
             message: "Login Successful",
             success: true,
-            user,
+            userData,
             statusCode: 200
         });
     }catch(error){
