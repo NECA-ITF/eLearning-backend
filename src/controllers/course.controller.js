@@ -344,7 +344,43 @@ async function handleDeleteOutlineVideos(req, res) {
     }
     
     async function handleUpdateOutline(req,res){
+        try {
+            const { courseId,title } = req.body;
+            const courseExists = await CourseModel.countDocuments({ _id: courseId });
+            if(!courseExists){
+                return res.status(404).json({
+                    message: "course not found",
+                    success: false,
+                    statusCode: 404
+                });
+            }
+    
+            const course = await OutlineModel.findOne({courseId:courseId});
+            oldOutlines = course.outlines
+            oldOutlines.push({title:title})
         
+            const resData = await OutlineModel.replaceOne({courseId:courseId},
+                {
+                    courseId:courseId,
+                    outlines:oldOutlines
+                })
+        
+            res.status(200).json({
+                success: true,
+                resData,
+                statusCode: 200,
+                message:"Outline Updated",
+            })
+    
+    
+            
+        } catch (error) {
+            return res.status(404).json({
+                message: "something went wrong",
+                success: false,
+                statusCode: 404
+            });
+        }
     }
     
 
