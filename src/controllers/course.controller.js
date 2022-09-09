@@ -189,6 +189,7 @@ try {
 }
 }
 
+
 async function handleDeleteCourse(req, res) {
     try{
         const { courseId } = req.body;
@@ -350,7 +351,7 @@ module.exports = {
     handleNewVideos, 
     handleGetCourses, 
     handleGetOutlines, 
-    handleGetVideos, 
+    handleGetVideos,
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo, 

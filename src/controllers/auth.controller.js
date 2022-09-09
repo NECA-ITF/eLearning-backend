@@ -1,10 +1,10 @@
-const userModel = require("../model/user.model");
+const UserModel = require("../model/user.model");
 
 async function handleRegister(req, res){
     const data = req.body;
     
-    const userEmailExists = await userModel.countDocuments({ email: data.email });
-    const userPhoneNumberExists = await userModel.countDocuments({ phoneNumber: data.phoneNumber });
+    const userEmailExists = await UserModel.countDocuments({ email: data.email });
+    const userPhoneNumberExists = await UserModel.countDocuments({ phoneNumber: data.phoneNumber });
 
     if( userEmailExists || userPhoneNumberExists ){
         return res.status(409).json({
@@ -15,7 +15,7 @@ async function handleRegister(req, res){
     }
 
     try{
-        let newUser = new userModel(data);
+        let newUser = new UserModel(data);
         newUser = await newUser.save();
         return res.status(201).json({
             message: "Successful!",
@@ -38,7 +38,7 @@ async function handleRegister(req, res){
 async function handleLogin(req, res){
     const data = req.body;
     try{
-        const userData = await userModel.findOne({ email: data.email, password: data.password})
+        const userData = await UserModel.findOne({ email: data.email, password: data.password})
         // console.log(userData)
         
         return res.status(200).json({
@@ -59,4 +59,39 @@ async function handleLogin(req, res){
     }
 
 }
-module.exports = { handleRegister, handleLogin };
+
+async function handleGetUser(req, res){
+    const { userId } = req.params;
+    const userExists = await UserModel.countDocuments({ _id: userId })
+    if(!userExists){
+        return res.status(404).json({
+            message: "user not found",
+            statusCode: 404,
+            success: false
+        });
+    }
+    try{
+        const user = await UserModel.findOne({ _id: userId })
+        return res.status(200).json({
+            message: "request successful",
+            user,
+            statusCode: 200,
+            success: true
+        });
+    }catch(error){
+        return res.status(200).json({
+            message: "user request successful",
+            user,
+            statusCode: 200,
+            success: true
+        });
+
+    }
+
+}
+
+module.exports = { 
+    handleRegister, 
+    handleLogin,
+    handleGetUser 
+};
