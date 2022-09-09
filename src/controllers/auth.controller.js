@@ -39,9 +39,9 @@ async function handleLogin(req, res){
     const { email, password } = req.body;
     const userExists = await UserModel.countDocuments({  email: email, password: password })
     if(!userExists){
-        return res.status(404).json({
+        return res.status(401).json({
             message: "Login Unsuccessful",
-            statusCode: 404,
+            statusCode: 401,
             success: false
         });
     }
@@ -54,10 +54,10 @@ async function handleLogin(req, res){
             success: true
         });
     }catch(error){
-        return res.status(400).json({
+        return res.status(401).json({
             message: "Login Unsuccessful",
             error,
-            statusCode: 400,
+            statusCode: 401,
             success: false
         });
 
