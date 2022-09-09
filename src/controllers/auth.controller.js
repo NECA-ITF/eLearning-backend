@@ -37,16 +37,16 @@ async function handleRegister(req, res){
 
 async function handleLogin(req, res){
     const { email, password } = req.body;
-    const userExists = await UserModel.countDocuments({  email: data.email, password: data.password })
+    const userExists = await UserModel.countDocuments({  email: email, password: password })
     if(!userExists){
         return res.status(404).json({
-            message: "user not found",
+            message: "Login Unsuccessful",
             statusCode: 404,
             success: false
         });
     }
     try{
-        const user = await UserModel.findOne({ email: data.email, password: data.password })
+        const user = await UserModel.findOne({ email: email, password: password })
         return res.status(200).json({
             message: "Login Successful",
             user,
