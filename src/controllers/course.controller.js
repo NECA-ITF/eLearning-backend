@@ -61,7 +61,7 @@ try {
 }
 
 async function handleNewVideos(req, res){
-const { courseId, outlinesId, outlineId } = req.body;    
+const { courseId, outlineId } = req.body;
 const courseExists = await CourseModel.countDocuments({ _id: courseId });
 
 if(!courseExists){
@@ -71,19 +71,10 @@ if(!courseExists){
         statusCode: 404
     });
 }
-const outlinesExist = await OutlineModel.countDocuments({ _id: outlinesId });
 
-if(!outlinesExist){
-    return res.status(404).json({
-        message: "outlines not found",
-        success: false,
-        statusCode: 404
-    });
-}
-
-const outlines = await OutlineModel.findOne({ _id: outlinesId });
-
-if(!outlines.outlines.find(outline => outline._id.toString() === outlineId )){
+const { outlines } = await OutlineModel.findOne({ courseId: courseId });
+const foundOutline = outlines.find(outline => outline._id.toString() === outlineId )
+if(!foundOutline){
     
     return res.status(404).json({
         message: "outline not found",
@@ -93,9 +84,10 @@ if(!outlines.outlines.find(outline => outline._id.toString() === outlineId )){
 }
 
 try {
-    const data = req.body
-    let resData = new VideoModel(data)
-    resData = await resData.save()
+    let data = req.body;
+    data["outlineTitle"] = foundOutline.title;
+    let resData = new VideoModel(data);
+    resData = await resData.save();
     res.status(201).json({
         success: true,
         resData,
@@ -103,17 +95,16 @@ try {
         message:"Videos added successfully"
     })
 } catch (error) {
-    console.log(error)
+    // console.log(error);
     
     res.status(400).json({
         success: false,
-        message:"Something has gone wrong",
+        message:"Something went wrong",
         error: error.message,
         statusCode: 400
     })
 }
 }
-
 
 async function handleGetCourses(req, res) {
 try{
@@ -165,11 +156,10 @@ try{
 }
 }
 
-
 async function handleGetVideos(req, res) {
-    const { courseId, outlineId } = req.params;
+    const { outlineId } = req.params;
     
-const videosExist = await VideoModel.countDocuments({ courseId: courseId, outlineId: outlineId });
+    const videosExist = await VideoModel.countDocuments({ outlineId: outlineId });
 
 if(!videosExist){
     return res.status(404).json({
@@ -179,7 +169,7 @@ if(!videosExist){
     });
 }
 
-const resData = await VideoModel.findOne({ courseId: courseId, outlineId: outlineId })
+const resData = await VideoModel.findOne({ outlineId: outlineId })
 
 try {
     console.log(resData)
@@ -199,7 +189,37 @@ try {
 }
 }
 
-async function handleDeleteSingleOutline(req,res){
+async function handleDeleteCourse(req, res) {
+    try{
+        const { courseId } = req.body;
+        const courseExist = await CourseModel.countDocuments({ _id: courseId});
+        if(!courseExist){
+            return res.status(404).json({
+                message: "Course not found",
+                success: false,
+                statusCode: 404
+            });
+        }
+        
+        const deletedCourse = await CourseModel.deleteOne({ _id: courseId });
+        return res.status(200).json({
+            message: "course deleted successfully",
+            deletedCourse,
+            statusCode: 200
+        });
+
+    }catch (error) {
+        // console.log(error)
+        res.status(400).json({
+        success: false,
+        message: "something went wrong",
+        statusCode: 400
+        })
+    }
+
+}
+
+async function handleDeleteOutline(req,res){
 
 const { courseId, outlineId } = req.body;
 const courseExist = await OutlineModel.countDocuments({ courseId: courseId});
@@ -240,39 +260,33 @@ try {
 }
 }
 
+async function handleDeleteVideo(req, res) {
+const { outlineId, videoId } = req.body;
+    try{
+        const  videoObj  = await VideoModel.findOne({ outlineId:  outlineId })
 
-async function handleDeleteSingleVideo(req, res) {
-const { courseId, outlinesId, outlineId, videoId } = req.body;
-try{
-    const { videos } = await VideoModel.findOne({ courseId: courseId, outlineId:  outlineId})
+        const filteredvideos = videoObj.videos.filter(video => video._id.toString() !== videoId);
+        videoObj["videos"] = filteredvideos;
+        const resData = await VideoModel.replaceOne({ outlineId: outlineId }, videoObj);
 
-    const filteredVideos = videos.filter(video => video._id.toString() !== videoId);
-
-    const resData = await VideoModel.replaceOne({ courseId: courseId }, { 
-        courseId: courseId,
-        outlinesId: outlinesId, 
-        outlineId: outlineId, 
-        videos: filteredVideos
-    });
-
-    return res.status(200).json({
-        message: "video deleted successfully",
-        resData,
-        success: true,
-        statusCode: 200
-    });
-}catch(error){
-    return res.status(404).json({
-        message: "something went wrong",
-        success: false,
-        statusCode: 404
-    });
-}
+        return res.status(200).json({
+            message: "video deleted successfully",
+            resData,
+            success: true,
+            statusCode: 200
+        });
+    }catch(error){
+        console.log( error )
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404
+        });
+    }
 
 }
 
-
-async function handleDeleteAllVideos(req, res) {
+async function handleDeleteOutlineVideos(req, res) {
 try{
     const { outlineId } = req.body;    
     const videosExist = await VideoModel.countDocuments({ outlineId: outlineId });
@@ -314,7 +328,7 @@ try{
     
     const deletedCourse = await VideoModel.deleteMany({ courseId: courseId });
     return res.status(200).json({
-        message: "course deleted successfully",
+        message: "videos deleted successfully",
         success: deletedCourse.acknowledged,
         number: deletedCourse.deletedCount,
         statusCode: 200
@@ -330,8 +344,6 @@ try{
 }
 }
 
-
-  
 module.exports = { 
     handleNewCourse, 
     handleNewOutline, 
@@ -339,8 +351,7 @@ module.exports = {
     handleGetCourses, 
     handleGetOutlines, 
     handleGetVideos, 
-    handleDeleteSingleOutline, 
-    handleDeleteSingleVideo, 
-    handleDeleteAllVideos, 
-    handleDeleteCourseVideos 
+    handleDeleteCourse,
+    handleDeleteOutline, 
+    handleDeleteVideo, 
 };

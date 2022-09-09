@@ -7,9 +7,9 @@ to connect to the local server
 
 CRUD----------------------------------------------------------------------------------------------
 
-***get all courses***
+*get all courses*
 sample request: GET
-http://192.168.137.1:5000/api/courses
+{{base-url}}/api/courses
 i.e get all the courses
 sample response:
 {
@@ -31,10 +31,10 @@ sample response:
 }
 
 
-***get outlines for a particular course i.e get the "folders" for that course (requires courseId)***
+*get outlines for a particular course i.e get the "folders" for that course (requires courseId)*
 
 sample request: GET
-http://192.168.137.1:5000/api/outlines/6319e44f9bc284efde1c9b03
+{{base-url}}/api/outlines/6319e44f9bc284efde1c9b03
 i.e get all the outline for the Git course
 sample response:
 {
@@ -62,10 +62,10 @@ sample response:
     "statusCode": 200
 }
 
-***get all videos in a particular outline  i.e course -> outline -> videos (requires outlineId)***
+*get all videos in a particular outline  i.e course -> outline -> videos (requires outlineId)*
 
 sample request: GET
-http://192.168.137.1:5000/api/videos/6319e44f9bc284efde1c9b03/6319e57ac7662c32e2b28723
+{{base-url}}/api/videos/6319e44f9bc284efde1c9b03/6319e57ac7662c32e2b28723
 i.e get all videos in Git course -> Introduction
 sample response:
 {
@@ -98,10 +98,10 @@ sample response:
     "message": "Videos gotten successfully"
 }
 
-***create new course*** 
+*create new course* 
 
 sample request: POST
-http://192.168.137.1:5000/api/course
+{{base-url}}/api/course
 body -> 
 i.e create Git course
 {
@@ -129,10 +129,10 @@ sample response:
     "message": "Course created successfully"
 }
 
-***create outline for a particular course i.e create the "folders" for that course (requires courseId)***
+*create outline for a particular course i.e create the "folders" for that course (requires courseId)*
 
 sample request: POST
-http://192.168.137.1:5000/api/outlines
+{{base-url}}/api/outlines
 body -> 
 i.e create three outlines for Git course
 {
@@ -176,16 +176,15 @@ sample response:
     "message": "Outline created successfully"
 }
 
-***create all videos in a particular outline i.e course -> outline -> videos (requires courseId, outlinesId and outlineId)***
+*create all videos in a particular outline i.e course -> outline -> videos (requires courseId and outlineId)*
 
 sample request: POST
-http://192.168.137.1:5000/api/videos
+{{base-url}}/api/videos
 body -> 
 i.e create three videos for introduction outline
 {
     "courseId": "6319e44f9bc284efde1c9b03",
-    "outlinesId": "6319e57ac7662c32e2b28722",
-    "outlineId": "6319e57ac7662c32e2b28723",
+    "outlineId": "631a1e041866d181cbfe67dc",
     "videos": [
         {
             "title": "Getting you ready",
@@ -207,36 +206,36 @@ sample response:
     "success": true,
     "resData": {
         "courseId": "6319e44f9bc284efde1c9b03",
-        "outlinesId": "6319e57ac7662c32e2b28722",
-        "outlineId": "6319e57ac7662c32e2b28723",
+        "outlineTitle": "Introduction",
+        "outlineId": "631a1e041866d181cbfe67dc",
         "videos": [
             {
                 "title": "Getting you ready",
                 "url": "www.video1.com",
-                "_id": "6319fdb2220080508e612e61"
+                "_id": "631b0af811eede07f7db716d"
             },
             {
                 "title": "Polymorphism",
                 "url": "www.video2.com",
-                "_id": "6319fdb2220080508e612e62"
+                "_id": "631b0af811eede07f7db716e"
             },
             {
                 "title": "Inheritance",
                 "url": "www.video3.com",
-                "_id": "6319fdb2220080508e612e63"
+                "_id": "631b0af811eede07f7db716f"
             }
         ],
-        "_id": "6319fdb2220080508e612e60",
+        "_id": "631b0af811eede07f7db716c",
         "__v": 0
     },
     "statusCode": 200,
     "message": "Videos added successfully"
 }
 
-***delete a specific outline from the course(require courseId and outlineId)***
+*delete a single outline from the course(require courseId and outlineId)*
 
 sample request: DELETE
-http://192.168.137.1:5000/api/outline
+{{base-url}}/api/outline
 i.e delete Introduction outline
 body -> 
 {
@@ -258,15 +257,13 @@ sample response:
     "message": "Outline Deleted"
 }
 
-***delete a single video in an outline (requires courseId, outlinesId, outlineId and videoId)***
+*delete a single video in an outline (requires outlineId and videoId)*
 
 sample request: DELETE
-http://192.168.137.1:5000/api/
+{{base-url}}/api/video
 i.e delete Inheritance video
 body -> 
 {
-    "courseId": "6319e44f9bc284efde1c9b03",
-    "outlinesId": "6319e57ac7662c32e2b28722",
     "outlineId": "6319e57ac7662c32e2b28723",
     "videoId": "6319fdb2220080508e612e63"
 }
@@ -285,23 +282,12 @@ sample response:
     "statusCode": 200
 }
 
-***delete all videos in an outline (reqiures outlineId)***
-
-sample request: DELETE
-http://192.168.137.1:5000/api/video
-body -> 
-//delete all videos under introduction outline
-{
-    "outlineId": "631a1e041866d181cbfe67dc"
-}
-
-sample response:
 
 AUTHENTICATION---------------------------------------------------------------------------------------
 
-***Register a user***
+*Register a user*
 sample request: POST
-http://192.168.137.1:5000/auth/user/register
+{{base-url}}/auth/user/register
 body -> 
 {
     "fullName": "Harrison Akunne",
@@ -326,9 +312,9 @@ sample response:
     "statusCode": 201
 }
 
-***Login a user*** 
+*Login a user* 
 sample request: POST
-http://192.168.137.1:5000/auth/user/login
+{{base-url}}/auth/user/login
 body -> 
 {
     "email": "harrisonderick.65@gmail.com",

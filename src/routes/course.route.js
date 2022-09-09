@@ -8,9 +8,9 @@ const {
     handleGetCourses, 
     handleGetOutlines, 
     handleGetVideos, 
-    handleDeleteSingleOutline, 
-    handleDeleteSingleVideo, 
-    handleDeleteAllVideos, 
+    handleDeleteCourse,
+    handleDeleteOutline, 
+    handleDeleteVideo
 } = require("../controllers/course.controller");
 
 route.post("/course", handleNewCourse)
@@ -23,9 +23,8 @@ route.get("/outlines/:courseId", handleGetOutlines)
 route.get("/videos/:courseId/:outlineId", handleGetVideos)
 
 
-route.delete("/outline", handleDeleteSingleOutline)
-
-route.delete("/video", handleDeleteSingleVideo)
-route.delete("/videos", handleDeleteAllVideos)
+route.delete("/course", handleDeleteCourse)
+route.delete("/outline", handleDeleteOutline)
+route.delete("/video", handleDeleteVideo)
 
 module.exports = route;
