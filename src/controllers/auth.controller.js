@@ -59,4 +59,10 @@ async function handleLogin(req, res){
     }
 
 }
+
 module.exports = { handleRegister, handleLogin };
+module.exports = { 
+    handleRegister, 
+    handleLogin 
+};
+

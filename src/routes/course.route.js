@@ -10,13 +10,15 @@ const {
     handleGetVideos, 
     handleDeleteCourse,
     handleDeleteOutline, 
-    handleDeleteVideo
+    handleDeleteVideo,
+    handleUpdateOutline
 } = require("../controllers/course.controller");
 
 route.post("/course", handleNewCourse)
 route.post("/outlines", handleNewOutline)
 route.post("/videos", handleNewVideos)
 
+route.put("/outlines", handleUpdateOutline)
 
 route.get("/courses", handleGetCourses)
 route.get("/outlines/:courseId", handleGetOutlines)
