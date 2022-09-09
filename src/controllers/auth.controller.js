@@ -36,33 +36,8 @@ async function handleRegister(req, res){
 }
 
 async function handleLogin(req, res){
-    const data = req.body;
-    try{
-        const userData = await UserModel.findOne({ email: data.email, password: data.password})
-        // console.log(userData)
-        
-        return res.status(200).json({
-            message: "Login Successful",
-            success: true,
-            userData,
-            statusCode: 200
-        });
-    }catch(error){
-        // console.log(error)
-        res.status(404).json({
-            message: "Login Unsuccessful",
-            success: false,
-            error,
-            statusCode: 404
-        });
-
-    }
-
-}
-
-async function handleGetUser(req, res){
-    const { userId } = req.params;
-    const userExists = await UserModel.countDocuments({ _id: userId })
+    const { email, password } = req.body;
+    const userExists = await UserModel.countDocuments({  email: data.email, password: data.password })
     if(!userExists){
         return res.status(404).json({
             message: "user not found",
@@ -71,27 +46,27 @@ async function handleGetUser(req, res){
         });
     }
     try{
-        const user = await UserModel.findOne({ _id: userId })
+        const user = await UserModel.findOne({ email: data.email, password: data.password })
         return res.status(200).json({
-            message: "request successful",
+            message: "Login Successful",
             user,
             statusCode: 200,
             success: true
         });
     }catch(error){
-        return res.status(200).json({
-            message: "user request successful",
-            user,
-            statusCode: 200,
-            success: true
+        return res.status(400).json({
+            message: "Login Unsuccessful",
+            error,
+            statusCode: 400,
+            success: false
         });
 
     }
 
 }
 
+
 module.exports = { 
     handleRegister, 
-    handleLogin,
-    handleGetUser 
+    handleLogin
 };

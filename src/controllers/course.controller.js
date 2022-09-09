@@ -189,7 +189,6 @@ try {
 }
 }
 
-
 async function handleDeleteCourse(req, res) {
     try{
         const { courseId } = req.body;
