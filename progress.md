@@ -282,6 +282,12 @@ sample response:
     "statusCode": 200
 }
 
+*updating an outline in a course(requires courseId)*
+
+sample reques: PUT
+{{base-url}}/api/outlies
+i.e update an outline
+
 
 AUTHENTICATION---------------------------------------------------------------------------------------
 
