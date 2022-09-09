@@ -285,6 +285,68 @@ const { outlineId, videoId } = req.body;
     }
 
 }
+async function handleDeleteOutlineVideos(req, res) {
+    try{
+        const { outlineId } = req.body;    
+        const videosExist = await VideoModel.countDocuments({ outlineId: outlineId });
+        if(!videosExist){
+            return res.status(404).json({
+                message: "outline not found",
+                success: false,
+                statusCode: 404
+            });
+        }
+        
+        const deletedVideos = await VideoModel.deleteOne({ outlineId: outlineId });
+        return res.status(200).json({
+            message: "videos deleted successfully",
+            deletedVideos,
+            statusCode: 200
+        });
+    }catch(error){
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404
+        });
+        
+    }
+    }
+    
+    async function handleDeleteCourseVideos(req, res) {
+    try{
+        const { courseId } = req.params;
+        const courseExists = await CourseModel.countDocuments({ _id: courseId });
+        if(!courseExists){
+            return res.status(404).json({
+                message: "course not found",
+                success: false,
+                statusCode: 404
+            });
+        }
+        
+        const deletedCourse = await VideoModel.deleteMany({ courseId: courseId });
+        return res.status(200).json({
+            message: "videos deleted successfully",
+            success: deletedCourse.acknowledged,
+            number: deletedCourse.deletedCount,
+            statusCode: 200
+        });
+        // console.log(deletedCourse);
+    }catch(error){
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404
+        });
+        
+    }
+    }
+    
+    async function handleUpdateOutline(req,res){
+        
+    }
+    
 
 
 
@@ -298,4 +360,5 @@ module.exports = {
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo,
+    handleUpdateOutline
 };
