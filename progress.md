@@ -282,6 +282,29 @@ sample response:
     "statusCode": 200
 }
 
+*updating an outline in a course(requires courseId)*
+
+sample reques: PUT
+{{base-url}}/api/outlies
+i.e update an outline
+body -> 
+{
+    "courseId":"631b1bf0c9be9d85ae521b5c",
+    "title":"intermidiate"
+}
+sample response:
+{
+    "success": true,
+    "resData": {
+        "acknowledged": true,
+        "modifiedCount": 1,
+        "upsertedId": null,
+        "upsertedCount": 0,
+        "matchedCount": 1
+    },
+    "statusCode": 200,
+    "message": "Outline Updated"
+}
 
 AUTHENTICATION---------------------------------------------------------------------------------------
 
