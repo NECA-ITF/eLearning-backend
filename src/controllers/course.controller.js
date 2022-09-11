@@ -1,6 +1,7 @@
 const CourseModel = require('../model/course.model')
 const OutlineModel = require('../model/outline.model')
 const VideoModel = require('../model/video.model')
+const UserModel = require('../model/user.model')
 
 async function handleNewCourse(req, res){
 try {
@@ -364,6 +365,26 @@ async function handleUpdateOutline(req,res){
     }
 }
 
+async function handleGetUsers(req, res) {
+    try{
+        const users = await UserModel.find()
+        return res.status(200).json({
+            message: "Successful!",
+            success: true,
+            users,
+            statusCode: 200
+        });
+    }catch(error){
+        res.status(500).json({
+            message: "Internal server error",
+            success: false,
+            // users,
+            statusCode: 500
+        });
+    }
+    }
+
+
 module.exports = { 
     handleNewCourse, 
     handleNewOutline, 
@@ -374,5 +395,6 @@ module.exports = {
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo,
-    handleUpdateOutline
+    handleUpdateOutline,
+    handleGetUsers
 };
