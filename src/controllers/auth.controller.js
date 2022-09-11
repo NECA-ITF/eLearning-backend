@@ -59,7 +59,18 @@ async function handleLogin(req, res){
     }
 
 }
+
+async function handleUpdateProfile(req,res){
+   
+   
+
+    
+}
+
+
+
 module.exports = { 
     handleRegister, 
-    handleLogin 
+    handleLogin,
+    handleUpdateProfile
 };

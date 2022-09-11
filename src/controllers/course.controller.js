@@ -311,9 +311,9 @@ async function handleDeleteOutlineVideos(req, res) {
         });
         
     }
-    }
+}
     
-    async function handleDeleteCourseVideos(req, res) {
+async function handleDeleteCourseVideos(req, res) {
     try{
         const { courseId } = req.params;
         const courseExists = await CourseModel.countDocuments({ _id: courseId });
@@ -341,9 +341,10 @@ async function handleDeleteOutlineVideos(req, res) {
         });
         
     }
-    }
+}
     
-    async function handleUpdateOutline(req,res){
+async function handleUpdateOutline(req,res){
+
         try {
             const { courseId,title } = req.body;
             const courseExists = await CourseModel.countDocuments({ _id: courseId });
@@ -356,6 +357,7 @@ async function handleDeleteOutlineVideos(req, res) {
             }
     
             const course = await OutlineModel.findOne({courseId:courseId});
+            
             oldOutlines = course.outlines
             oldOutlines.push({title:title})
         
@@ -381,7 +383,7 @@ async function handleDeleteOutlineVideos(req, res) {
                 statusCode: 404
             });
         }
-    }
+}
     
 
 
@@ -396,5 +398,5 @@ module.exports = {
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo,
-    handleUpdateOutline
+    handleUpdateOutline,
 };
