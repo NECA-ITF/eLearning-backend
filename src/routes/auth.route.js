@@ -2,8 +2,7 @@ const express = require("express");
 const route = express.Router();
 const { 
     handleRegister, 
-    handleLogin ,
-    handleUpdateProfile
+    handleLogin
 } = require("../controllers/auth.controller");
 
 route.post("/user/register", handleRegister);

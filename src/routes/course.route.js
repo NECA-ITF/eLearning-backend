@@ -18,7 +18,7 @@ route.post("/course", handleNewCourse)
 route.post("/outlines", handleNewOutline)
 route.post("/videos", handleNewVideos)
 
-route.put("/outlines", handleUpdateOutline)
+route.put("/outline", handleUpdateOutline)
 
 route.get("/courses", handleGetCourses)
 route.get("/outlines/:courseId", handleGetOutlines)
