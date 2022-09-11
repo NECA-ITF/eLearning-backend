@@ -11,22 +11,23 @@ const {
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo,
-    handleUpdateOutline
+    handleUpdateOutline,
+    handleUpdateVdeos
 } = require("../controllers/course.controller");
 
 route.post("/course", handleNewCourse)
 route.post("/outlines", handleNewOutline)
 route.post("/videos", handleNewVideos)
 
-route.put("/outline", handleUpdateOutline)
-
 route.get("/courses", handleGetCourses)
 route.get("/outlines/:courseId", handleGetOutlines)
-route.get("/videos/:courseId/:outlineId", handleGetVideos)
-
+route.get("/videos/:outlineId", handleGetVideos)
 
 route.delete("/course", handleDeleteCourse)
 route.delete("/outline", handleDeleteOutline)
 route.delete("/video", handleDeleteVideo)
+
+route.put("/outline", handleUpdateOutline)
+route.put("/video", handleUpdateVdeos)
 
 module.exports = route;
