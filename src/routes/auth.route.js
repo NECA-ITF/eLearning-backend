@@ -7,5 +7,6 @@ const {
 
 route.post("/user/register", handleRegister);
 route.post("/user/login", handleLogin);
+route.put("/user/updateprofile/:id", handleUpdateProfile);
 
 module.exports = route;

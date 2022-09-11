@@ -374,5 +374,5 @@ module.exports = {
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo,
-    handleUpdateOutline
+    handleUpdateOutline,
 };
