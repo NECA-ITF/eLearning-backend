@@ -1,6 +1,7 @@
 const CourseModel = require('../model/course.model')
 const OutlineModel = require('../model/outline.model')
 const VideoModel = require('../model/video.model')
+const UserModel = require('../model/user.model')
 
 async function handleNewCourse(req, res){
 try {
