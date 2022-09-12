@@ -64,13 +64,31 @@ async function handleLogin(req, res){
     }
 
 }
+async function handleGetUsers(req, res) {
+    try{
+        const users = await UserModel.find()
+        return res.status(200).json({
+            message: "Successful!",
+            success: true,
+            users,
+            statusCode: 200
+        });
+    }catch(error){
+        res.status(500).json({
+            message: "Internal server error",
+            success: false,
+            // users,
+            statusCode: 500
+        });
+    }
+    }
 async function handleUpdateProfile(req,res){
    
     try {
         const id = req.params.id;
         const data = req.body
         const user = await userModel.findOne({_id:id});
-
+        
         if(!user){
             return res.status(400).json({
                 message: "User does not exists",
@@ -108,8 +126,10 @@ async function handleUpdateProfile(req,res){
     
 }
 
+
 module.exports = { 
     handleRegister, 
     handleLogin,
+    handleGetUsers,
     handleUpdateProfile
 };

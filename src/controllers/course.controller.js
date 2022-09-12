@@ -292,9 +292,9 @@ try {
 async function handleDeleteVideo(req, res) {
 const { outlineId, videoId } = req.body;
     try{
-        const  videoObj  = await VideoModel.findOne({ outlineId:  outlineId })
+        const  oldVideoObj  = await VideoModel.findOne({ outlineId:  outlineId })
 
-        const foundVideo = videoObj.videos.find(video => video._id.toString() === videoId);
+        const foundVideo = oldVideoObj.videos.find(video => video._id.toString() === videoId);
         if(!foundVideo){
             return res.status(404).json({
                 message: "video not found",
@@ -304,9 +304,9 @@ const { outlineId, videoId } = req.body;
         }
 
 
-        const filteredvideos = videoObj.videos.filter(video => video._id.toString() !== videoId);
-        videoObj["videos"] = filteredvideos;
-        const resData = await VideoModel.replaceOne({ outlineId: outlineId }, videoObj);
+        const filteredVideos = oldVideoObj.videos.filter(video => video._id.toString() !== videoId);
+        oldVideoObj["videos"] = filteredVideos;
+        const resData = await VideoModel.replaceOne({ outlineId: outlineId }, oldVideoObj);
 
         return res.status(200).json({
             message: "video deleted successfully",
@@ -364,6 +364,43 @@ async function handleUpdateOutline(req,res){
     }
 }
 
+async function handleUpdateVideos(req,res){
+    try{
+        const { outlineId, title: newVideoTitle, url: newVideoUrl } = req.body;
+
+        const videosExist = await VideoModel.countDocuments({ outlineId: outlineId });
+        
+        if(!videosExist){
+            return res.status(404).json({
+                message: "video collection not found",
+                success: false,
+                statusCode: 404
+            });
+        }
+
+        const videosObj = await VideoModel.findOne({ outlineId: outlineId });
+        const { videos: oldVideos } = videosObj;
+        const newVideos = oldVideos.push({title: newVideoTitle, url: newVideoUrl});
+        videosObj["videos"] = newVideos;
+
+        const resData = await VideoModel.replaceOne({ outlineId: outlineId }, videosObj);
+
+        return res.status(201).json({
+            message: "video added successfully",
+            resData,
+            success: true,
+            statusCode: 201
+        });
+
+    }catch(error){
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404
+        });
+    }
+}
+
 module.exports = { 
     handleNewCourse, 
     handleNewOutline, 
@@ -375,4 +412,5 @@ module.exports = {
     handleDeleteOutline, 
     handleDeleteVideo,
     handleUpdateOutline,
+    handleUpdateVideos
 };
