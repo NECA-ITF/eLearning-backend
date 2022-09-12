@@ -4,13 +4,15 @@ const route = express.Router();
 const { 
     handleRegister, 
     handleLogin,
-    handleGetUsers
+    handleGetUsers,
+    handleUpdateProfile
 } = require("../controllers/auth.controller");
 const { handlePassword } = require('../model/Password')
 
 route.post("/user/register", handleRegister);
 route.post("/user/login", handleLogin);
 route.put("/password", handlePassword)
+route.put("/user/updateprofile/:id", handleUpdateProfile);
 
 route.get("/users", handleGetUsers);
 

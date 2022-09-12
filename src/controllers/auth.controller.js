@@ -64,7 +64,6 @@ async function handleLogin(req, res){
     }
 
 }
-
 async function handleGetUsers(req, res) {
     try{
         const users = await UserModel.find()
@@ -83,10 +82,54 @@ async function handleGetUsers(req, res) {
         });
     }
     }
+async function handleUpdateProfile(req,res){
+   
+    try {
+        const id = req.params.id;
+        const data = req.body
+        const user = await userModel.findOne({_id:id});
+        
+        if(!user){
+            return res.status(400).json({
+                message: "User does not exists",
+                success: false,
+                statusCode: 409
+            });
+        }
+        const {fullName,email,phoneNumber} = data
+        const resData = await userModel.replaceOne({_id:id},
+            {
+                fullName:fullName,
+                email:email,
+                phoneNumber:phoneNumber,
+                password:user.password,
+                isAdmin:user.isAdmin
+            }
+        )
+
+        return res.status(200).json({
+            message:"Profile Updated",
+            success:true,
+            data:resData,
+            statusCode:200
+
+        });
+
+    } catch (error) {
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404,
+            error:error
+        });
+    }
+    
+}
 
 
 module.exports = { 
     handleRegister, 
     handleLogin,
-    handleGetUsers
+    handleGetUsers,
+    handleUpdateProfile
 };
