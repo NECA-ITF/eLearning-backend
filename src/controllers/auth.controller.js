@@ -1,10 +1,10 @@
-const userModel = require("../model/user.model");
+const UserModel = require("../model/user.model");
 
 async function handleRegister(req, res){
     const data = req.body;
     
-    const userEmailExists = await userModel.countDocuments({ email: data.email });
-    const userPhoneNumberExists = await userModel.countDocuments({ phoneNumber: data.phoneNumber });
+    const userEmailExists = await UserModel.countDocuments({ email: data.email });
+    const userPhoneNumberExists = await UserModel.countDocuments({ phoneNumber: data.phoneNumber });
 
     if( userEmailExists || userPhoneNumberExists ){
         return res.status(409).json({
@@ -15,7 +15,7 @@ async function handleRegister(req, res){
     }
 
     try{
-        let newUser = new userModel(data);
+        let newUser = new UserModel(data);
         newUser = await newUser.save();
         return res.status(201).json({
             message: "Successful!",
@@ -36,33 +36,80 @@ async function handleRegister(req, res){
 }
 
 async function handleLogin(req, res){
-    const data = req.body;
+    const { email, password } = req.body;
+    const userExists = await UserModel.countDocuments({  email: email, password: password })
+    if(!userExists){
+        return res.status(401).json({
+            message: "Login Unsuccessful",
+            statusCode: 401,
+            success: false
+        });
+    }
     try{
-        const userData = await userModel.findOne({ email: data.email, password: data.password})
-        // console.log(userData)
-        
+        const user = await UserModel.findOne({ email: email, password: password })
         return res.status(200).json({
             message: "Login Successful",
-            success: true,
-            userData,
-            statusCode: 200
+            user,
+            statusCode: 200,
+            success: true
         });
     }catch(error){
-        // console.log(error)
-        res.status(404).json({
+        return res.status(401).json({
             message: "Login Unsuccessful",
-            success: false,
             error,
-            statusCode: 404
+            statusCode: 401,
+            success: false
         });
 
     }
 
 }
+async function handleUpdateProfile(req,res){
+   
+    try {
+        const id = req.params.id;
+        const data = req.body
+        const user = await userModel.findOne({_id:id});
 
-module.exports = { handleRegister, handleLogin };
+        if(!user){
+            return res.status(400).json({
+                message: "User does not exists",
+                success: false,
+                statusCode: 409
+            });
+        }
+        const {fullName,email,phoneNumber} = data
+        const resData = await userModel.replaceOne({_id:id},
+            {
+                fullName:fullName,
+                email:email,
+                phoneNumber:phoneNumber,
+                password:user.password,
+                isAdmin:user.isAdmin
+            }
+        )
+
+        return res.status(200).json({
+            message:"Profile Updated",
+            success:true,
+            data:resData,
+            statusCode:200
+
+        });
+
+    } catch (error) {
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404,
+            error:error
+        });
+    }
+    
+}
+
 module.exports = { 
     handleRegister, 
-    handleLogin 
+    handleLogin,
+    handleUpdateProfile
 };
-

@@ -27,18 +27,18 @@ try {
 async function handleNewOutline(req, res){
 
 
-const { courseId } = req.body;    
-const courseExists = await CourseModel.countDocuments({ _id: courseId });
+try {
+    const { courseId } = req.body;    
+    const courseExists = await CourseModel.countDocuments({ _id: courseId });
 
-if(!courseExists){
-    return res.status(404).json({
-        message: "course not found",
-        success: false,
-        statusCode: 404
-    });
+    if(!courseExists){
+        return res.status(404).json({
+            message: "course not found",
+            success: false,
+            statusCode: 404
+        });
 }
 
-try {
     const data = req.body
     
     let resData =  new OutlineModel(data)
@@ -61,6 +61,7 @@ try {
 }
 
 async function handleNewVideos(req, res){
+try {
 const { courseId, outlineId } = req.body;
 const courseExists = await CourseModel.countDocuments({ _id: courseId });
 
@@ -83,7 +84,6 @@ if(!foundOutline){
     });
 }
 
-try {
     let data = req.body;
     data["outlineTitle"] = foundOutline.title;
     let resData = new VideoModel(data);
@@ -192,6 +192,17 @@ try {
 async function handleDeleteCourse(req, res) {
     try{
         const { courseId } = req.body;
+
+        const videosExist = await VideoModel.countDocuments({ courseId: courseId});
+        if(videosExist){
+            await VideoModel.deleteMany({ courseId: courseId });
+        }
+
+        const outlinesExist = await OutlineModel.countDocuments({ courseId: courseId});
+        if(outlinesExist){
+            await OutlineModel.deleteOne({ courseId: courseId });
+        }
+
         const courseExist = await CourseModel.countDocuments({ _id: courseId});
         if(!courseExist){
             return res.status(404).json({
@@ -202,6 +213,7 @@ async function handleDeleteCourse(req, res) {
         }
         
         const deletedCourse = await CourseModel.deleteOne({ _id: courseId });
+
         return res.status(200).json({
             message: "course deleted successfully",
             deletedCourse,
@@ -222,36 +234,53 @@ async function handleDeleteCourse(req, res) {
 async function handleDeleteOutline(req,res){
 
 const { courseId, outlineId } = req.body;
-const courseExist = await OutlineModel.countDocuments({ courseId: courseId});
-if(!courseExist){
-    return res.status(404).json({
-        message: "Course not found",
-        success: false,
-        statusCode: 404
-    });
-}
 
 try { 
-    const course = await OutlineModel.findOne({courseId:courseId});
+    const videosExist = await VideoModel.countDocuments({ outlineId: outlineId});
+    if(videosExist){
+        await VideoModel.deleteOne({ outlineId: outlineId });
+    }
 
-    const filterdOutlines = course.outlines.filter((outline) =>
+    const courseExist = await OutlineModel.countDocuments({ courseId: courseId});
+    if(!courseExist){
+        return res.status(404).json({
+            message: "outline not found",
+            success: false,
+            statusCode: 404
+        });
+    }
+
+    const {outlines} = await OutlineModel.findOne({courseId:courseId});
+
+    const foundOutline = outlines.find((outline) =>
+        outline._id.toString() === outlineId
+    )
+    if(!foundOutline){
+        return res.status(404).json({
+            message: "outline not found",
+            success: false,
+            statusCode: 404
+        });
+    }
+
+    const filterdOutlines = outlines.filter((outline) =>
         outline._id.toString() !== outlineId
     )
 
-    const resData = await OutlineModel.replaceOne({courseId:courseId},
+    const deletedOutline = await OutlineModel.replaceOne({courseId:courseId},
         {
             courseId:courseId,
             outlines:filterdOutlines
         })
 
-    res.status(200).json({
+    return res.status(200).json({
         success: true,
-        resData,
+        deletedOutline,
         statusCode: 200,
         message:"Outline Deleted",
     })
 } catch (error) {
-    console.log(error)
+    // console.log(error)
     res.status(400).json({
     success:false,
     message: "seems we can't find what you are looking for",
@@ -265,6 +294,16 @@ const { outlineId, videoId } = req.body;
     try{
         const  videoObj  = await VideoModel.findOne({ outlineId:  outlineId })
 
+        const foundVideo = videoObj.videos.find(video => video._id.toString() === videoId);
+        if(!foundVideo){
+            return res.status(404).json({
+                message: "video not found",
+                success: false,
+                statusCode: 404
+            });
+        }
+
+
         const filteredvideos = videoObj.videos.filter(video => video._id.toString() !== videoId);
         videoObj["videos"] = filteredvideos;
         const resData = await VideoModel.replaceOne({ outlineId: outlineId }, videoObj);
@@ -277,45 +316,18 @@ const { outlineId, videoId } = req.body;
         });
     }catch(error){
         console.log( error )
-        return res.status(404).json({
+        return res.status(400).json({
             message: "something went wrong",
             success: false,
-            statusCode: 404
+            statusCode: 400
         });
     }
 
 }
-async function handleDeleteOutlineVideos(req, res) {
-    try{
-        const { outlineId } = req.body;    
-        const videosExist = await VideoModel.countDocuments({ outlineId: outlineId });
-        if(!videosExist){
-            return res.status(404).json({
-                message: "outline not found",
-                success: false,
-                statusCode: 404
-            });
-        }
-        
-        const deletedVideos = await VideoModel.deleteOne({ outlineId: outlineId });
-        return res.status(200).json({
-            message: "videos deleted successfully",
-            deletedVideos,
-            statusCode: 200
-        });
-    }catch(error){
-        return res.status(404).json({
-            message: "something went wrong",
-            success: false,
-            statusCode: 404
-        });
-        
-    }
-    }
-    
-    async function handleDeleteCourseVideos(req, res) {
-    try{
-        const { courseId } = req.params;
+
+async function handleUpdateOutline(req,res){
+    try {
+        const { courseId, title: newOutlineTitle } = req.body;
         const courseExists = await CourseModel.countDocuments({ _id: courseId });
         if(!courseExists){
             return res.status(404).json({
@@ -324,67 +336,33 @@ async function handleDeleteOutlineVideos(req, res) {
                 statusCode: 404
             });
         }
+
+        const {outlines: oldOutlines} = await OutlineModel.findOne({courseId:courseId});
+        oldOutlines.push({title: newOutlineTitle})
+    
+        const resData = await OutlineModel.replaceOne({courseId:courseId},
+            {
+                courseId:courseId,
+                outlines:oldOutlines
+            })
+    
+        res.status(200).json({
+            success: true,
+            resData,
+            statusCode: 200,
+            message:"Outline Updated",
+        })
+
+
         
-        const deletedCourse = await VideoModel.deleteMany({ courseId: courseId });
-        return res.status(200).json({
-            message: "videos deleted successfully",
-            success: deletedCourse.acknowledged,
-            number: deletedCourse.deletedCount,
-            statusCode: 200
-        });
-        // console.log(deletedCourse);
-    }catch(error){
+    } catch (error) {
         return res.status(404).json({
             message: "something went wrong",
             success: false,
             statusCode: 404
         });
-        
     }
-    }
-    
-    async function handleUpdateOutline(req,res){
-        try {
-            const { courseId,title } = req.body;
-            const courseExists = await CourseModel.countDocuments({ _id: courseId });
-            if(!courseExists){
-                return res.status(404).json({
-                    message: "course not found",
-                    success: false,
-                    statusCode: 404
-                });
-            }
-    
-            const course = await OutlineModel.findOne({courseId:courseId});
-            oldOutlines = course.outlines
-            oldOutlines.push({title:title})
-        
-            const resData = await OutlineModel.replaceOne({courseId:courseId},
-                {
-                    courseId:courseId,
-                    outlines:oldOutlines
-                })
-        
-            res.status(200).json({
-                success: true,
-                resData,
-                statusCode: 200,
-                message:"Outline Updated",
-            })
-    
-    
-            
-        } catch (error) {
-            return res.status(404).json({
-                message: "something went wrong",
-                success: false,
-                statusCode: 404
-            });
-        }
-    }
-    
-
-
+}
 
 module.exports = { 
     handleNewCourse, 
@@ -392,9 +370,9 @@ module.exports = {
     handleNewVideos, 
     handleGetCourses, 
     handleGetOutlines, 
-    handleGetVideos, 
+    handleGetVideos,
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo,
-    handleUpdateOutline
+    handleUpdateOutline,
 };
