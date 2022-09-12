@@ -21,4 +21,6 @@ mongoose.connect('mongodb://localhost:27017/E-learning-app')
     console.log(`Database connected and server running on port: ${PORT}`);
   })
 })
+
+
 .catch((err) => {console.log(new Error(err))})
