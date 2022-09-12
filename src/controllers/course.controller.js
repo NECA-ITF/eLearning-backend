@@ -143,9 +143,10 @@ try{
     return res.status(200).json({
         message: "Successful!",
         success: true,
-        outline,
+                outline,
         statusCode: 200
     });
+
 }catch(error){
     res.status(500).json({
         message: "Internal server error",
