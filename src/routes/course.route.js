@@ -12,7 +12,7 @@ const {
     handleDeleteOutline, 
     handleDeleteVideo,
     handleUpdateOutline,
-    handleUpdateVdeos
+    handleUpdateVideos
 } = require("../controllers/course.controller");
 
 route.post("/course", handleNewCourse)
@@ -28,6 +28,6 @@ route.delete("/outline", handleDeleteOutline)
 route.delete("/video", handleDeleteVideo)
 
 route.put("/outline", handleUpdateOutline)
-route.put("/video", handleUpdateVdeos)
+route.put("/video", handleUpdateVideos)
 
 module.exports = route;

@@ -65,9 +65,28 @@ async function handleLogin(req, res){
 
 }
 
+async function handleGetUsers(req, res) {
+    try{
+        const users = await UserModel.find()
+        return res.status(200).json({
+            message: "Successful!",
+            success: true,
+            users,
+            statusCode: 200
+        });
+    }catch(error){
+        res.status(500).json({
+            message: "Internal server error",
+            success: false,
+            // users,
+            statusCode: 500
+        });
+    }
+    }
 
 
 module.exports = { 
     handleRegister, 
-    handleLogin
+    handleLogin,
+    handleGetUsers
 };

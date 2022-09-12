@@ -12,7 +12,7 @@ app.use(cors());
 app.use('/api', AppRoute);
 app.use('/auth', authRoute)
 app.use('/api', courseRoute)
-
+app.use(express.static(process.env.PWD + '/assets'))
 
 app.get('/',(req,res)=>{
     res.send('HELLO WELCOME TO THE E-LEARNING APP BACKEND')

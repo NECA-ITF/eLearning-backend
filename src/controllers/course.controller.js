@@ -1,7 +1,6 @@
 const CourseModel = require('../model/course.model')
 const OutlineModel = require('../model/outline.model')
 const VideoModel = require('../model/video.model')
-const UserModel = require('../model/user.model')
 
 async function handleNewCourse(req, res){
 try {
@@ -365,7 +364,7 @@ async function handleUpdateOutline(req,res){
     }
 }
 
-async function handleUpdateVdeos(req,res){
+async function handleUpdateVideos(req,res){
     try{
         const { outlineId, title: newVideoTitle, url: newVideoUrl } = req.body;
 
@@ -413,5 +412,5 @@ module.exports = {
     handleDeleteOutline, 
     handleDeleteVideo,
     handleUpdateOutline,
-    handleUpdateVdeos
+    handleUpdateVideos
 };
