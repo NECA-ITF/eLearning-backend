@@ -21,7 +21,7 @@ const videoSchema = new Schema({
           type: String,
           required: true
         },
-        url: {
+        title: {
           type: String,
           required: true 
         }
