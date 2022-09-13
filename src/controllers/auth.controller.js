@@ -152,7 +152,7 @@ async function handleForgottenPassword(req,res){
          console.log(updatedUser)
          return res.status(200).json({
              message:"password changed successfully ",
-//              success:true,
+             success:true,
 //              updatedUser,
 //              statusCode:200
  
