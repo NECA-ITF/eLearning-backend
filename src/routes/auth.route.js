@@ -6,6 +6,7 @@ const {
     handleLogin,
     handleGetUsers,
     handleUpdateProfile,
+    handleForgottenPassword
 } = require("../controllers/auth.controller");
 const { handlePassword } = require('../model/Password')
 
