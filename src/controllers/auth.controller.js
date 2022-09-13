@@ -129,7 +129,9 @@ async function handleUpdateProfile(req,res){
 
 
 async function handleForgottenPassword(req,res){
-   
+    try {    
+
+    }
    
 }
 
