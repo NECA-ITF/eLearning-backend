@@ -159,7 +159,7 @@ async function handleForgottenPassword(req,res){
 }
 catch (error) {
     return res.status(404).json({
-//         message: "something went wrong",
+        message: "something went wrong",
 //         success: false,
 //         statusCode: 404,
 //         error:error
