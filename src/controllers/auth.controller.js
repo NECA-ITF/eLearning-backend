@@ -1,4 +1,4 @@
-const userModel = require("../model/user.model");
+// const userModel = require("../model/user.model");
 const UserModel = require("../model/user.model");
 
 async function handleRegister(req, res){
@@ -166,7 +166,6 @@ catch (error) {
     });
 }
 
-}
 
 
 
