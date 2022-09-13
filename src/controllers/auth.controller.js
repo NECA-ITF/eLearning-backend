@@ -177,5 +177,4 @@ module.exports = {
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword
-
 };
