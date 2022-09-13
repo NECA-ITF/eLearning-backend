@@ -5,6 +5,8 @@ const VideoModel = require('../model/video.model')
 async function handleNewCourse(req, res){
 try {
     const data = req.body
+    data['thumbnail'] = `api/static/${req.file.filename}`;
+    
     let resData = new CourseModel(data)
     resData = await resData.save()
     res.status(201).json({
