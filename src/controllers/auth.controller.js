@@ -132,6 +132,9 @@ async function handleForgottenPassword(req,res){
     try {    
         const {userId, password: newPassword} = req.body
         const userExists = await userModel.countDocuments({_id:userId});
+
+        if(!userExists){
+            
     }
    
 }
