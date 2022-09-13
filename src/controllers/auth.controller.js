@@ -88,7 +88,7 @@ async function handleUpdateProfile(req,res){
         const id = req.params.id;
         const data = req.body
         const user = await userModel.findOne({_id:id});
-        
+
         if(!user){
             return res.status(400).json({
                 message: "User does not exists",
@@ -127,9 +127,54 @@ async function handleUpdateProfile(req,res){
 }
 
 
+async function handleChangePassword (req, res) {
+    try  {
+        const { userId, password: newPassword } = req.body;
+        const userExists = await UserModel.countDocuments({_id: userId });
+        if(!userExists){
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+                statusCode: 404
+            });
+        }
+
+        const user = await UserModel.findOne({ _id: userId });
+        const newUserObject = user;
+        newUserObject.password = newPassword;
+        console.log(newUserObject)
+    
+        
+        const changePassword = await UserModel.replaceOne({ _id: userId }, newUserObject);
+        
+        const updatedUser = await UserModel.findOne({ _id: userId });
+        
+        return res.status(200).json({
+            message: "password changed successfully",
+            updatedUser,
+            success: true,
+            statusCode: 200
+        });
+
+
+    } catch (error) {
+        console.log(error.message)
+        console.log(error)
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404,
+            error: error.message,
+        });
+        
+    }
+}
+
+
 module.exports = { 
     handleRegister, 
     handleLogin,
     handleGetUsers,
-    handleUpdateProfile
+    handleUpdateProfile,
+    handleChangePassword
 };
