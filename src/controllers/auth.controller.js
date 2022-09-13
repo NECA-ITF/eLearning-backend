@@ -149,9 +149,24 @@ async function handleForgottenPassword(req,res){
 
          const updatedUser = await userModel.findOne({_id: userId});
 
-         
+//          console.log(updatedUser)
+//          return res.status(200).json({
+//              message:"password changed successfully ",
+//              success:true,
+//              updatedUser,
+//              statusCode:200
+ 
+//          }); 
+// }
+// catch (error) {
+//     return res.status(404).json({
+//         message: "something went wrong",
+//         success: false,
+//         statusCode: 404,
+//         error:error
+//     });
+// }
 
-   
 }
 
 
@@ -161,4 +176,6 @@ module.exports = {
     handleLogin,
     handleGetUsers,
     handleUpdateProfile,
+    handleForgottenPassword
+
 };
