@@ -134,7 +134,11 @@ async function handleForgottenPassword(req,res){
         const userExists = await userModel.countDocuments({_id:userId});
 
         if(!userExists){
-            
+            return res.status(400).json({
+                message: "User does not exists",
+                success: false,
+                statusCode: 409
+            });
     }
    
 }
