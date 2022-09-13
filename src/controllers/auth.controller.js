@@ -1,3 +1,4 @@
+const userModel = require("../model/user.model");
 const UserModel = require("../model/user.model");
 
 async function handleRegister(req, res){
@@ -127,9 +128,16 @@ async function handleUpdateProfile(req,res){
 }
 
 
+async function handleForgottenPassword(req,res){
+   
+   
+}
+
+
+
 module.exports = { 
     handleRegister, 
     handleLogin,
     handleGetUsers,
-    handleUpdateProfile
+    handleUpdateProfile,
 };
