@@ -162,7 +162,7 @@ catch (error) {
         message: "something went wrong",
         success: false,
         statusCode: 404,
-//         error:error
+        error:error
 //     });
 // }
 
