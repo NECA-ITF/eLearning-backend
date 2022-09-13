@@ -4,10 +4,14 @@ const VideoModel = require('../model/video.model')
 
 async function handleNewCourse(req, res){
 try {
-    const data = req.body
-    data['thumbnail'] = `api/static/${req.file.filename}`;
+    const courseData = JSON.parse(req.body.courseData)
+    // const data = (req.body)
+    // console.log(req.file)
+    courseData['thumbnail'] = `api/static/images/${req.file.filename}`;
+    courseData['requirements'] = courseData.requirements.split(",");
+    // console.log(courseData)
     
-    let resData = new CourseModel(data)
+    let resData = new CourseModel(courseData)
     resData = await resData.save()
     res.status(201).json({
         success: true,
