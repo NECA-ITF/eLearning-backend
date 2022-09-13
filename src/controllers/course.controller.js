@@ -402,6 +402,7 @@ async function handleUpdateVideos(req,res){
     }
 }
 
+
 module.exports = { 
     handleNewCourse, 
     handleNewOutline, 
