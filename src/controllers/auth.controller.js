@@ -131,7 +131,7 @@ async function handleUpdateProfile(req,res){
 async function handleForgottenPassword(req,res){
     try {    
         const {userId, password: newPassword} = req.body
-        const userExists = await userModel.countDocuments({_id:userId});
+        const userExists = await UserModel.countDocuments({_id:userId});
 
         if(!userExists){
             return res.status(400).json({
@@ -141,15 +141,15 @@ async function handleForgottenPassword(req,res){
             });
     }
 
-        const user = await userModel.findOne({_id: userId});
+        const user = await UserModel.findOne({_id: userId});
         const newUserObject = user;
          newUserObject["password"] = newPassword;
 
-         const forgottenPassword = await userModel.replaceOne({_id: userId }, newUserObject);
+         const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
 
-         const updatedUser = await userModel.findOne({_id: userId});
+         const updatedUser = await UserModel.findOne({_id: userId});
 
-         console.log(updatedUser)
+        //  console.log(updatedUser)
          return res.status(200).json({
              message:"password changed successfully ",
              success:true,
@@ -158,6 +158,7 @@ async function handleForgottenPassword(req,res){
          }); 
     }
     catch (error) {
+        // console.log(error)
         return res.status(404).json({
             message: "something went wrong",
             success: false,
