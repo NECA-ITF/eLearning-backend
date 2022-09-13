@@ -7,6 +7,6 @@ const {
   } = require('../controllers/app.controller');
 
 route.get('/static/images/:filename', httpServeStaticImages);
-route.get('/static/videos/:filename', httpServeStaticVideos);
+route.get('/static/videos/:filename', httpServeStaticVideos); 
 
 module.exports = route;

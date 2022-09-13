@@ -1,3 +1,4 @@
+// const userModel = require("../model/user.model");
 const UserModel = require("../model/user.model");
 
 async function handleRegister(req, res){
@@ -127,46 +128,43 @@ async function handleUpdateProfile(req,res){
 }
 
 
-async function handleChangePassword (req, res) {
-    try  {
-        const { userId, password: newPassword } = req.body;
-        const userExists = await UserModel.countDocuments({_id: userId });
+async function handleForgottenPassword(req,res){
+    try {    
+        const {userId, password: newPassword} = req.body
+        const userExists = await UserModel.countDocuments({_id:userId});
+
         if(!userExists){
-            return res.status(404).json({
-                message: "User not found",
+            return res.status(400).json({
+                message: "User does not exists",
                 success: false,
-                statusCode: 404
+                statusCode: 409
             });
-        }
+    }
 
-        const user = await UserModel.findOne({ _id: userId });
+        const user = await UserModel.findOne({_id: userId});
         const newUserObject = user;
-        newUserObject.password = newPassword;
-        console.log(newUserObject)
-    
-        
-        const changePassword = await UserModel.replaceOne({ _id: userId }, newUserObject);
-        
-        const updatedUser = await UserModel.findOne({ _id: userId });
-        
-        return res.status(200).json({
-            message: "password changed successfully",
-            updatedUser,
-            success: true,
-            statusCode: 200
-        });
+         newUserObject["password"] = newPassword;
 
+         const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
 
-    } catch (error) {
-        console.log(error.message)
-        console.log(error)
+         const updatedUser = await UserModel.findOne({_id: userId});
+
+        //  console.log(updatedUser)
+         return res.status(200).json({
+             message:"password changed successfully ",
+             success:true,
+             updatedUser,
+             statusCode:200 
+         }); 
+    }
+    catch (error) {
+        // console.log(error)
         return res.status(404).json({
             message: "something went wrong",
+            error,
             success: false,
-            statusCode: 404,
-            error: error.message,
+            statusCode: 404
         });
-        
     }
 }
 
@@ -176,5 +174,5 @@ module.exports = {
     handleLogin,
     handleGetUsers,
     handleUpdateProfile,
-    handleChangePassword
+    handleForgottenPassword
 };
