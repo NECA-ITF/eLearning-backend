@@ -1,4 +1,4 @@
-// const userModel = require("../model/user.model");
+const userModel = require("../model/user.model");
 const UserModel = require("../model/user.model");
 
 async function handleRegister(req, res){
@@ -139,15 +139,16 @@ async function handleForgottenPassword(req,res){
                 success: false,
                 statusCode: 409
             });
-    }
+        }
 
-        const user = await userModel.findOne({_id: userId});
+        const user = await UserModel.findOne({_id: userId});
         const newUserObject = user;
          newUserObject["password"] = newPassword;
 
-         const forgottenPassword = await userModel.replaceOne({_id: userId }, newUserObject);
+         const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
+         console.log(forgottenPassword)
 
-         const updatedUser = await userModel.findOne({_id: userId});
+         const updatedUser = await UserModel.findOne({_id: userId});
 
          console.log(updatedUser)
          return res.status(200).json({
@@ -168,6 +169,56 @@ async function handleForgottenPassword(req,res){
 }
 
 
+async function handleChangePassword(req, res) {
+    try {
+        const {userId, newPassword, oldPassword} = req.body
+        const userExists = await UserModel.countDocuments({ _id: userId})
+        
+        if(!userExists){
+            return res.status(400).json({
+                message: "User does not exists",
+                success: false,
+                statusCode: 400
+            });
+        }
+        const oldPass = await UserModel.countDocuments({ password: oldPassword})
+
+        if(!oldPass){
+            return res.status(400).json({
+                message: "Password incorrect, try again",
+                success: false,
+                statusCode: 400
+            });
+        }
+
+        const user = await UserModel.findOne({_id: userId})
+        const newUserObject = user
+        newUserObject["password"] = newPassword
+        const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
+        console.log(forgottenPassword)
+
+        const updatedUser = await UserModel.findOne({_id: userId});
+
+        console.log(updatedUser)
+
+        return res.status(200).json({
+            message:"password changed successfully ",
+            success:true,
+            updatedUser,
+            statusCode:200 
+        }); 
+        
+
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404,
+            error:error
+        });
+    }
+}
 
 
 module.exports = { 
@@ -175,5 +226,6 @@ module.exports = {
     handleLogin,
     handleGetUsers,
     handleUpdateProfile,
-    handleForgottenPassword
+    handleForgottenPassword,
+    handleChangePassword
 };
