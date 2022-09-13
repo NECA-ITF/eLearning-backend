@@ -140,6 +140,10 @@ async function handleForgottenPassword(req,res){
                 statusCode: 409
             });
     }
+
+    const user = await userModel.findOne({_id: userId});
+        const newUserObject = user;
+         newUserObject["password"] = newPassword;
    
 }
 
