@@ -1,4 +1,4 @@
-const userModel = require("../model/user.model");
+// const userModel = require("../model/user.model");
 const UserModel = require("../model/user.model");
 
 async function handleRegister(req, res){
@@ -154,20 +154,19 @@ async function handleForgottenPassword(req,res){
              message:"password changed successfully ",
              success:true,
              updatedUser,
-             statusCode:200
- 
+             statusCode:200 
          }); 
-}
-catch (error) {
-    return res.status(404).json({
-        message: "something went wrong",
-        success: false,
-        statusCode: 404,
-        error:error
-    });
+    }
+    catch (error) {
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404,
+            error:error
+        });
+    }
 }
 
-}
 
 
 
@@ -177,5 +176,4 @@ module.exports = {
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword
-
 };
