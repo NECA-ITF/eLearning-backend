@@ -141,9 +141,13 @@ async function handleForgottenPassword(req,res){
             });
     }
 
-    const user = await userModel.findOne({_id: userId});
+        const user = await userModel.findOne({_id: userId});
         const newUserObject = user;
          newUserObject["password"] = newPassword;
+
+         const forgottenPassword = await userModel.replaceOne({_id: userId }, newUserObject);
+
+         const updatedUser = await userModel.findOne({_id: userId});
    
 }
 
