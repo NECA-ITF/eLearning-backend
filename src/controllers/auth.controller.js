@@ -209,7 +209,7 @@ async function handleChangedPassword(req,res){
 }
 
 
-async function handleChangePassword(req, res) {
+async function handleChangedPassword(req, res) {
     try {
         const {userId, newPassword, oldPassword} = req.body
         const userExists = await UserModel.countDocuments({ _id: userId})
