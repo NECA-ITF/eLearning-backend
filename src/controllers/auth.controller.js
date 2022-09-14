@@ -131,7 +131,7 @@ async function handleUpdateProfile(req,res){
 async function handleForgottenPassword(req,res){
     try {    
         const {email, password: newPassword} = req.body
-        const userExists = await UserModel.countDocuments({email:});
+        const userExists = await UserModel.countDocuments({email: email});
 
         if(!userExists){
             return res.status(400).json({
@@ -141,7 +141,7 @@ async function handleForgottenPassword(req,res){
             });
         }
 
-        const user = await UserModel.findOne({_id: userId});
+        const user = await UserModel.findOne({email: email});
         const newUserObject = user;
          newUserObject["password"] = newPassword;
 
