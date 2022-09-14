@@ -197,6 +197,10 @@ async function handleChangedPassword(req,res){
 
         }
 
+        catch (error) {
+           
+        }
+
 }
 
 
