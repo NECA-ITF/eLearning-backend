@@ -180,6 +180,11 @@ async function handleChangedPassword(req,res){
                     statusCode: 400
                 });
         }
+           const user = await UserModel.findOne({_id: userId});
+           const newUserObject = user;
+           newUserObject["password"] = newPassword;
+
+
         }
 
 }
