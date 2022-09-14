@@ -173,7 +173,9 @@ async function handleChangedPassword(req,res){
             const {userId, oldPassword,newPassword} = req.body
             const passwordMatched = await UserModel.countDocuments({password: oldPassword});
 
-
+            if(!passwordMatched){
+              
+        }
         }
 
 }
