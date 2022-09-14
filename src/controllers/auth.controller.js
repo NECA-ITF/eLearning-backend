@@ -170,17 +170,18 @@ async function handleForgottenPassword(req,res){
 
 async function handleChangePassword(req,res){
         try{
-            const {userId, oldPassword,newPassword} = req.body
-            const passwordMatched = await UserModel.countDocuments({password: oldPassword});
+            const {userId, oldPassword, newPassword} = req.body
+            const user = await UserModel.findOne({_id: userId});
+            // const userExists = await UserModel.countDocuments({_id: userId});
+            //  const passwordMatched = oldPassword
 
-            if(!passwordMatched){
+            if(user.password !== oldPassword){
                 return res.status(400).json({
-                    message: "wrong old password",
+                    message: "wrong password",
                     success: false,
                     statusCode: 400
                 });
         }
-           const user = await UserModel.findOne({_id: userId});
            const newUserObject = user;
            newUserObject["password"] = newPassword;
 
@@ -190,7 +191,7 @@ async function handleChangePassword(req,res){
             
            return res.status(200).json({
             message:"password changed successfully ",
-            success:true,
+            success: true,
             updatedUser,
             statusCode:200
         }); 
