@@ -168,6 +168,46 @@ async function handleForgottenPassword(req,res){
     }
 }
 
+async function handleChangedPassword(req,res){
+        try{
+            const {userId, oldPassword,newPassword} = req.body
+            const passwordMatched = await UserModel.countDocuments({password: oldPassword});
+
+            if(!passwordMatched){
+                return res.status(400).json({
+                    message: "wrong old password",
+                    success: false,
+                    statusCode: 400
+                });
+        }
+           const user = await UserModel.findOne({_id: userId});
+           const newUserObject = user;
+           newUserObject["password"] = newPassword;
+
+           const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
+
+           const updatedUser = await UserModel.findOne({_id: userId});
+            
+           return res.status(200).json({
+            message:"password changed successfully ",
+            success:true,
+            updatedUser,
+            statusCode:200
+        }); 
+
+        }
+
+        catch (error) {
+            return res.status(404).json({
+                message: "something went wrong",
+                success: false,
+                statusCode: 404,
+                error:error
+            });
+        }
+
+}
+
 
 async function handleChangePassword(req, res) {
     try {
@@ -227,5 +267,5 @@ module.exports = {
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword,
-    handleChangePassword
+    handleChangedPassword
 };

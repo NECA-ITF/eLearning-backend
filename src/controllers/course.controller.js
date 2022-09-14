@@ -403,6 +403,7 @@ async function handleUpdateVideos(req,res){
 }
 
 
+
 module.exports = { 
     handleNewCourse, 
     handleNewOutline, 
@@ -414,5 +415,5 @@ module.exports = {
     handleDeleteOutline, 
     handleDeleteVideo,
     handleUpdateOutline,
-    handleUpdateVideos
+    handleUpdateVideos,
 };
