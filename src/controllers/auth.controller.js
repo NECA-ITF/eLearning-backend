@@ -202,7 +202,7 @@ async function handleChangePassword(req,res){
             message: "something went wrong",
             success: false,
             statusCode: 404,
-            error:error
+            // error:error
         });
     }
 }
