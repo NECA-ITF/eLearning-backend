@@ -7,17 +7,15 @@ const {
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword,
-    handleChangedPassword
+    handleChangePassword
 } = require("../controllers/auth.controller");
-const { handlePassword } = require('../model/Password')
 
 route.post("/user/register", handleRegister);
 route.post("/user/login", handleLogin);
-route.put("/password", handlePassword)
+
 route.put("/user/updateprofile/:id", handleUpdateProfile);
 route.put("/forgottenpassword", handleForgottenPassword)
-route.put("/changedpassword", handleChangedPassword)
-
+route.put("/changedPassword", handleChangePassword)
 route.get("/users", handleGetUsers);
 
 module.exports = route;

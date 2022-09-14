@@ -89,7 +89,7 @@ async function handleUpdateProfile(req,res){
         const id = req.params.id;
         const data = req.body
         const user = await userModel.findOne({_id:id});
-        
+
         if(!user){
             return res.status(400).json({
                 message: "User does not exists",
@@ -161,9 +161,9 @@ async function handleForgottenPassword(req,res){
         // console.log(error)
         return res.status(404).json({
             message: "something went wrong",
+            error,
             success: false,
-            statusCode: 404,
-            error:error
+            statusCode: 404
         });
     }
 }
@@ -172,7 +172,6 @@ async function handleForgottenPassword(req,res){
 //         try{
 //             const {userId, oldPassword,newPassword} = req.body
 //             const passwordMatched = await UserModel.countDocuments({password: oldPassword});
-
 //             if(!passwordMatched){
 //                 return res.status(400).json({
 //                     message: "wrong old password",
@@ -209,6 +208,7 @@ async function handleForgottenPassword(req,res){
 // }
 
 
+<<<<<<< HEAD
 async function handleChangedPassword(req, res) {
     try {
         const {userId, newPassword, password: oldPassword} = req.body
@@ -270,5 +270,5 @@ module.exports = {
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword,
-    handleChangedPassword
+    handleChangePassword
 };
