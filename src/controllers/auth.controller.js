@@ -131,7 +131,7 @@ async function handleUpdateProfile(req,res){
 async function handleForgottenPassword(req,res){
     try {    
         const {email, password: newPassword} = req.body
-        const userExists = await UserModel.countDocuments({_id:userId});
+        const userExists = await UserModel.countDocuments({email:});
 
         if(!userExists){
             return res.status(400).json({
