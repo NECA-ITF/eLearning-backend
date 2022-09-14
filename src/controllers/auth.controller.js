@@ -172,8 +172,6 @@ async function handleChangePassword(req,res){
         try{
             const {userId, oldPassword, newPassword} = req.body
             const user = await UserModel.findOne({_id: userId});
-            // const userExists = await UserModel.countDocuments({_id: userId});
-            //  const passwordMatched = oldPassword
 
             if(user.password !== oldPassword){
                 return res.status(400).json({
@@ -186,11 +184,9 @@ async function handleChangePassword(req,res){
         const newUserObject = user
         newUserObject["password"] = newPassword
         const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
-        // console.log(newUserObject)
 
         const updatedUser = await UserModel.findOne({_id: userId});
 
-        // console.log(updatedUser)
 
         return res.status(200).json({
             message:"password changed successfully ",
