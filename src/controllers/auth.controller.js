@@ -147,7 +147,7 @@ async function handleForgottenPassword(req,res){
 
          const forgottenPassword = await UserModel.replaceOne({email: email }, newUserObject);
          console.log(forgottenPassword)
-         const updatedUser = await UserModel.findOne({email: userId});
+         const updatedUser = await UserModel.findOne({email: email});
 
         //  console.log(updatedUser)
          return res.status(200).json({
