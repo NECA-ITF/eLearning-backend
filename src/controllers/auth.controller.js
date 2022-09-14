@@ -1,4 +1,4 @@
-// const userModel = require("../model/user.model");
+const userModel = require("../model/user.model");
 const UserModel = require("../model/user.model");
 
 async function handleRegister(req, res){
@@ -130,8 +130,8 @@ async function handleUpdateProfile(req,res){
 
 async function handleForgottenPassword(req,res){
     try {    
-        const {userId, password: newPassword} = req.body
-        const userExists = await UserModel.countDocuments({_id:userId});
+        const {email, password: newPassword} = req.body
+        const userExists = await UserModel.countDocuments({email: email});
 
         if(!userExists){
             return res.status(400).json({
@@ -139,17 +139,17 @@ async function handleForgottenPassword(req,res){
                 success: false,
                 statusCode: 409
             });
-    }
+        }
 
-        const user = await UserModel.findOne({_id: userId});
+        const user = await UserModel.findOne({email: email});
         const newUserObject = user;
          newUserObject["password"] = newPassword;
 
-         const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
+         const forgottenPassword = await UserModel.replaceOne({email: email }, newUserObject);
+         console.log(forgottenPassword)
+         const updatedUser = await UserModel.findOne({email: email});
 
-         const updatedUser = await UserModel.findOne({_id: userId});
-
-        //  console.log(updatedUser)
+         console.log(updatedUser)
          return res.status(200).json({
              message:"password changed successfully ",
              success:true,
@@ -168,7 +168,7 @@ async function handleForgottenPassword(req,res){
     }
 }
 
-async function handleChangedPassword(req,res){
+async function handleChangePassword(req,res){
         try{
             const {userId, oldPassword,newPassword} = req.body
             const passwordMatched = await UserModel.countDocuments({password: oldPassword});
@@ -215,5 +215,5 @@ module.exports = {
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword,
-    handleChangedPassword
+    handleChangePassword
 };

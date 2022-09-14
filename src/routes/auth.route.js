@@ -7,7 +7,7 @@ const {
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword,
-    handleChangedPassword
+    handleChangePassword
 } = require("../controllers/auth.controller");
 
 route.post("/user/register", handleRegister);
@@ -15,7 +15,7 @@ route.post("/user/login", handleLogin);
 
 route.put("/user/updateprofile/:id", handleUpdateProfile);
 route.put("/forgottenpassword", handleForgottenPassword)
-route.put("/changedPassword", handleChangedPassword)
+route.put("/changedPassword", handleChangePassword)
 
 route.get("/users", handleGetUsers);
 
