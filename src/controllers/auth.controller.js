@@ -182,31 +182,33 @@ async function handleChangePassword(req,res){
                     statusCode: 400
                 });
         }
-           const newUserObject = user;
-           newUserObject["password"] = newPassword;
 
-           const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
+        const newUserObject = user
+        newUserObject["password"] = newPassword
+        const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
+        // console.log(newUserObject)
 
-           const updatedUser = await UserModel.findOne({_id: userId});
-            
-           return res.status(200).json({
+        const updatedUser = await UserModel.findOne({_id: userId});
+
+        // console.log(updatedUser)
+
+        return res.status(200).json({
             message:"password changed successfully ",
-            success: true,
+            success:true,
             updatedUser,
-            statusCode:200
+            statusCode:200 
         }); 
+        
 
-        }
-
-        catch (error) {
-            return res.status(404).json({
-                message: "something went wrong",
-                success: false,
-                statusCode: 404,
-                error:error
-            });
-        }
-
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            message: "something went wrong",
+            success: false,
+            statusCode: 404,
+            error:error
+        });
+    }
 }
 
 
