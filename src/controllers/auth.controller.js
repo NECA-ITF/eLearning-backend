@@ -190,9 +190,9 @@ async function handleChangedPassword(req,res){
             
            return res.status(200).json({
             message:"password changed successfully ",
-           
-
-
+            success:true,
+            updatedUser,
+            statusCode:200
         }); 
 
         }
