@@ -89,7 +89,7 @@ async function handleUpdateProfile(req,res){
         const id = req.params.id;
         const data = req.body
         const user = await userModel.findOne({_id:id});
-        
+
         if(!user){
             return res.status(400).json({
                 message: "User does not exists",
@@ -161,9 +161,9 @@ async function handleForgottenPassword(req,res){
         // console.log(error)
         return res.status(404).json({
             message: "something went wrong",
+            error,
             success: false,
-            statusCode: 404,
-            error:error
+            statusCode: 404
         });
     }
 }
@@ -207,8 +207,6 @@ async function handleChangedPassword(req,res){
         }
 
 }
-
-
 
 
 module.exports = { 
