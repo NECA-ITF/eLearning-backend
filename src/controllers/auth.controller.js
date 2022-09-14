@@ -198,7 +198,9 @@ async function handleChangedPassword(req,res){
         }
 
         catch (error) {
-           
+            return res.status(404).json({
+                
+            });
         }
 
 }
