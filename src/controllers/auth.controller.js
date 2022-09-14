@@ -169,7 +169,11 @@ async function handleForgottenPassword(req,res){
 }
 
 async function handleChangedPassword(req,res){
-    
+        try{
+
+
+            
+        }
 
 }
 
