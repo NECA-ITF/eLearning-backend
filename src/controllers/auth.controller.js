@@ -174,7 +174,11 @@ async function handleChangedPassword(req,res){
             const passwordMatched = await UserModel.countDocuments({password: oldPassword});
 
             if(!passwordMatched){
-              
+                return res.status(400).json({
+                    message: "wrong old password",
+                    success: false,
+                    statusCode: 409
+                });
         }
         }
 
