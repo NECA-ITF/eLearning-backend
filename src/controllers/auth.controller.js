@@ -175,7 +175,7 @@ async function handleChangePassword(req,res){
 
             if(user.password !== oldPassword){
                 return res.status(400).json({
-                    message: "wrong password",
+                    message: "wrong old password",
                     success: false,
                     statusCode: 400
                 });
