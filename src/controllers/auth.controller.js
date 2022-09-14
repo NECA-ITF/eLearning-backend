@@ -168,50 +168,50 @@ async function handleForgottenPassword(req,res){
     }
 }
 
-async function handleChangedPassword(req,res){
-        try{
-            const {userId, oldPassword,newPassword} = req.body
-            const passwordMatched = await UserModel.countDocuments({password: oldPassword});
+// async function handleChangedPassword(req,res){
+//         try{
+//             const {userId, oldPassword,newPassword} = req.body
+//             const passwordMatched = await UserModel.countDocuments({password: oldPassword});
 
-            if(!passwordMatched){
-                return res.status(400).json({
-                    message: "wrong old password",
-                    success: false,
-                    statusCode: 400
-                });
-        }
-           const user = await UserModel.findOne({_id: userId});
-           const newUserObject = user;
-           newUserObject["password"] = newPassword;
+//             if(!passwordMatched){
+//                 return res.status(400).json({
+//                     message: "wrong old password",
+//                     success: false,
+//                     statusCode: 400
+//                 });
+//         }
+//            const user = await UserModel.findOne({_id: userId});
+//            const newUserObject = user;
+//            newUserObject["password"] = newPassword;
 
-           const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
+//            const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
 
-           const updatedUser = await UserModel.findOne({_id: userId});
+//            const updatedUser = await UserModel.findOne({_id: userId});
             
-           return res.status(200).json({
-            message:"password changed successfully ",
-            success:true,
-            updatedUser,
-            statusCode:200
-        }); 
+//            return res.status(200).json({
+//             message:"password changed successfully ",
+//             success:true,
+//             updatedUser,
+//             statusCode:200
+//         }); 
 
-        }
+//         }
 
-        catch (error) {
-            return res.status(404).json({
-                message: "something went wrong",
-                success: false,
-                statusCode: 404,
-                error:error
-            });
-        }
+//         catch (error) {
+//             return res.status(404).json({
+//                 message: "something went wrong",
+//                 success: false,
+//                 statusCode: 404,
+//                 error:error
+//             });
+//         }
 
-}
+// }
 
 
 async function handleChangedPassword(req, res) {
     try {
-        const {userId, newPassword, oldPassword} = req.body
+        const {userId, newPassword, password: oldPassword} = req.body
         const userExists = await UserModel.countDocuments({ _id: userId})
         
         if(!userExists){
@@ -221,9 +221,13 @@ async function handleChangedPassword(req, res) {
                 statusCode: 400
             });
         }
-        const oldPass = await UserModel.countDocuments({ password: oldPassword})
+        const user = await UserModel.findOne({ _id: userId})
+        // console.log(user)
 
-        if(!oldPass){
+        
+        // const oldPass = await UserModel.countDocuments({ password: oldPassword})
+
+        if(user.password !== oldPassword){
             return res.status(400).json({
                 message: "Password incorrect, try again",
                 success: false,
@@ -231,15 +235,14 @@ async function handleChangedPassword(req, res) {
             });
         }
 
-        const user = await UserModel.findOne({_id: userId})
         const newUserObject = user
         newUserObject["password"] = newPassword
         const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
-        console.log(forgottenPassword)
+        // console.log(newUserObject)
 
         const updatedUser = await UserModel.findOne({_id: userId});
 
-        console.log(updatedUser)
+        // console.log(updatedUser)
 
         return res.status(200).json({
             message:"password changed successfully ",
