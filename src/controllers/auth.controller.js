@@ -1,6 +1,7 @@
 const userModel = require("../model/user.model");
 const UserModel = require("../model/user.model");
 
+
 async function handleRegister(req, res){
     const data = req.body;
     
@@ -38,16 +39,10 @@ async function handleRegister(req, res){
 
 async function handleLogin(req, res){
     const { email, password } = req.body;
-    const userExists = await UserModel.countDocuments({  email: email, password: password })
-    if(!userExists){
-        return res.status(401).json({
-            message: "Login Unsuccessful",
-            statusCode: 401,
-            success: false
-        });
-    }
-    try{
-        const user = await UserModel.findOne({ email: email, password: password })
+
+    try{          
+         
+        const user = await userModel.login(email, password)     
         return res.status(200).json({
             message: "Login Successful",
             user,
@@ -61,10 +56,11 @@ async function handleLogin(req, res){
             statusCode: 401,
             success: false
         });
-
+       
     }
 
 }
+
 async function handleGetUsers(req, res) {
     try{
         const users = await UserModel.find()
@@ -146,10 +142,10 @@ async function handleForgottenPassword(req,res){
          newUserObject["password"] = newPassword;
 
          const forgottenPassword = await UserModel.replaceOne({email: email }, newUserObject);
-         //console.log(forgottenPassword)
+         
          const updatedUser = await UserModel.findOne({email: email});
 
-         //console.log(updatedUser)
+
          return res.status(200).json({
              message:"password changed successfully ",
              success:true,
@@ -158,7 +154,7 @@ async function handleForgottenPassword(req,res){
          }); 
     }
     catch (error) {
-        // console.log(error)
+    
         return res.status(404).json({
             message: "something went wrong",
             error,
