@@ -142,10 +142,10 @@ async function handleForgottenPassword(req,res){
          newUserObject["password"] = newPassword;
 
          const forgottenPassword = await UserModel.replaceOne({email: email }, newUserObject);
-        //  console.log(forgottenPassword)
+         
          const updatedUser = await UserModel.findOne({email: email});
 
-        //  console.log(updatedUser)
+
          return res.status(200).json({
              message:"password changed successfully ",
              success:true,
@@ -154,7 +154,7 @@ async function handleForgottenPassword(req,res){
          }); 
     }
     catch (error) {
-        // console.log(error)
+    
         return res.status(404).json({
             message: "something went wrong",
             error,
@@ -179,9 +179,8 @@ async function handleChangePassword(req,res){
 
         const newUserObject = user
         newUserObject["password"] = newPassword
-        const forgottenPassword = await UserModel.replaceOne({_id: userId }, newUserObject);
-        console.log(forgottenPassword)
-        
+        await UserModel.replaceOne({_id: userId }, newUserObject);
+
         const updatedUser = await UserModel.findOne({_id: userId});
 
 

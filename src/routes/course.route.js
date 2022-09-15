@@ -1,5 +1,16 @@
 const express = require("express");
 const route = express.Router();
+const multer = require('multer');
+const imgStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'src/assets/images/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname )
+  }
+});
+const uploadImg = multer({ storage: imgStorage })
+
 
 const { 
     handleNewCourse, 
@@ -15,7 +26,7 @@ const {
     handleUpdateVideos
 } = require("../controllers/course.controller");
 
-route.post("/course", handleNewCourse)
+route.post("/course", uploadImg.single('file'), handleNewCourse)
 route.post("/outlines", handleNewOutline)
 route.post("/videos", handleNewVideos)
 
