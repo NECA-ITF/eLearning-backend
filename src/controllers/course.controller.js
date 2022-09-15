@@ -54,6 +54,10 @@ try {
         //checking if the title exit 
         const titleExist = oldOutlines.find(outline => outline.title === newOutlineTitle)
         
+        if(titleExist){
+            
+        }
+
         oldOutlines.push({title: newOutlineTitle})
         
         resData = await OutlineModel.replaceOne({courseId:courseId},
