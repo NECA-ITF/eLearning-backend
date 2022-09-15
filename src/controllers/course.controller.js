@@ -34,7 +34,7 @@ async function handleNewOutline(req, res){
 
 
 try {
-    const { courseId } = req.body;    
+    const { courseId, title: newOutlineTitle } = req.body;    
     const courseExists = await CourseModel.countDocuments({ _id: courseId });
 
     if(!courseExists){
@@ -45,10 +45,31 @@ try {
         });
 }
 
-    const data = req.body
-    
-    let resData =  new OutlineModel(data)
-    resData = await resData.save()
+    let resData;
+    const outlinesExist = await OutlineModel.countDocuments({courseId:courseId});
+
+    if(outlinesExist){
+        const {outlines: oldOutlines} = await OutlineModel.findOne({courseId:courseId});
+        oldOutlines.push({title: newOutlineTitle})
+        
+        resData = await OutlineModel.replaceOne({courseId:courseId},
+            {
+                courseId:courseId,
+                outlines:oldOutlines
+            })
+    }else{
+        const data = req.body
+        data["outlines"] = [
+            {
+                title: newOutlineTitle
+            }
+        ];
+        
+        resData = new OutlineModel(data)
+        resData = await resData.save()
+    }
+
+
     res.status(201).json({
         success: true,
         resData,
