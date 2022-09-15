@@ -40,7 +40,17 @@ async function handleRegister(req, res){
 async function handleLogin(req, res){
     const { email, password } = req.body;
 
-   
+    try{          
+         
+        const user = await userModel.login(email, password)     
+        return res.status(200).json({
+            message: "Login Successful",
+            user,
+            statusCode: 200,
+            success: true
+        });
+    }
+
 }
 
 async function handleGetUsers(req, res) {
