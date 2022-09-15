@@ -49,6 +49,10 @@ async function handleLogin(req, res){
             statusCode: 200,
             success: true
         });
+    }catch(error){
+        
+       
+
     }
 
 }
