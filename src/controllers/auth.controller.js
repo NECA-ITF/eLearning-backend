@@ -50,9 +50,13 @@ async function handleLogin(req, res){
             success: true
         });
     }catch(error){
-        
+        return res.status(401).json({
+            message: "Login Unsuccessful",
+            error,
+            statusCode: 401,
+            success: false
+        });
        
-
     }
 
 }
