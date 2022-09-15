@@ -36,5 +36,10 @@ const userSchema = new Schema({
     });
 
 
+    userSchema.statics.login = async function(email, password){
+        
+    }
+
+
 
 module.exports = model("User", userSchema);
