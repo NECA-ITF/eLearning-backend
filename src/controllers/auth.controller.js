@@ -205,7 +205,19 @@ async function handleChangePassword(req,res){
 
 
 async function handleDeleteUser(req, res) {
-    
+    try{
+        const {id} = req.body
+
+        const user = await UserModel.countDocuments({_id: id});
+
+        const deletedUser = await UserModel.deleteOne({_id: id });
+
+    return res.status(200).json({
+        message: "user deleted successfully",
+        deletedUser,
+        statusCode: 200
+    });
+   
 
 }
 
