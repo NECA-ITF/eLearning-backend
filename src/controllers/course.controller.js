@@ -50,6 +50,18 @@ try {
 
     if(outlinesExist){
         const {outlines: oldOutlines} = await OutlineModel.findOne({courseId:courseId});
+        
+        //checking if the title exit 
+        const titleExist = oldOutlines.find(outline => outline.title === newOutlineTitle)
+        
+        if(titleExist){
+            return res.status(400).json({
+                message: "Outline already exit",
+                success: false,
+                statusCode: 400
+            });
+        }
+
         oldOutlines.push({title: newOutlineTitle})
         
         resData = await OutlineModel.replaceOne({courseId:courseId},
@@ -89,7 +101,20 @@ try {
 
 async function handleNewVideos(req, res){
 try {
-const { courseId, outlineId } = req.body;
+    const videoData = JSON.parse(req.body.videoData)
+    console.log(videoData)
+    console.log(req.file)
+    // console.log(req.file)
+    videoData['videos'] = [
+        {
+            title: videoData.title,
+            url: `api/static/videos/${req.file.filename}`
+        }
+    ];
+    // console.log(videoData)
+
+
+const { courseId, outlineId, title: newVideoTitle } = videoData;
 const courseExists = await CourseModel.countDocuments({ _id: courseId });
 
 if(!courseExists){
@@ -102,19 +127,23 @@ if(!courseExists){
 
 const { outlines } = await OutlineModel.findOne({ courseId: courseId });
 const foundOutline = outlines.find(outline => outline._id.toString() === outlineId )
+let resData;
 if(!foundOutline){
     
-    return res.status(404).json({
-        message: "outline not found",
-        success: false,
-        statusCode: 404
-    });
-}
-
-    let data = req.body;
-    data["outlineTitle"] = foundOutline.title;
-    let resData = new VideoModel(data);
+    videoData["outlineTitle"] = foundOutline.title;
+    resData = new VideoModel(videoData);
     resData = await resData.save();
+}else{
+    const videosObj = await VideoModel.findOne({ outlineId: outlineId });
+        const { videos: oldVideos } = videosObj;
+        const newVideos = oldVideos.push({
+            title: videoData.title,
+            url: `api/static/videos/${req.file.filename}`
+        });
+        videosObj["videos"] = newVideos;
+
+        resData = await VideoModel.replaceOne({ outlineId: outlineId }, videosObj);
+}
     res.status(201).json({
         success: true,
         resData,
@@ -186,6 +215,7 @@ try{
 
 async function handleGetVideos(req, res) {
     const { outlineId } = req.params;
+    try {
     
     const videosExist = await VideoModel.countDocuments({ outlineId: outlineId });
 
@@ -199,8 +229,6 @@ if(!videosExist){
 
 const resData = await VideoModel.findOne({ outlineId: outlineId })
 
-try {
-    console.log(resData)
     res.status(200).json({
         success: true,
         resData,
@@ -208,7 +236,7 @@ try {
         message:"Videos gotten successfully",
     })
 } catch (error) {
-    console.log(error)
+    // console.log(error)
     res.status(400).json({
         success:false,
     message: "seems we can't find what you are looking for",
@@ -245,6 +273,7 @@ async function handleDeleteCourse(req, res) {
         return res.status(200).json({
             message: "course deleted successfully",
             deletedCourse,
+            success: true,
             statusCode: 200
         });
 
@@ -291,15 +320,20 @@ try {
         });
     }
 
-    const filterdOutlines = outlines.filter((outline) =>
+    let deletedOutline;
+    if(outlines.length === 1){
+        deletedOutline = await OutlineModel.deleteOne({courseId:courseId})
+    }else{
+        const filterdOutlines = outlines.filter((outline) =>
         outline._id.toString() !== outlineId
-    )
+        )
 
-    const deletedOutline = await OutlineModel.replaceOne({courseId:courseId},
-        {
-            courseId:courseId,
-            outlines:filterdOutlines
-        })
+       deletedOutline = await OutlineModel.replaceOne({courseId:courseId},
+            {
+                courseId:courseId,
+                outlines:filterdOutlines
+            })
+    }
 
     return res.status(200).json({
         success: true,
@@ -330,12 +364,14 @@ const { outlineId, videoId } = req.body;
                 statusCode: 404
             });
         }
-
-
-        
-        const filteredVideos = oldVideoObj.videos.filter(video => video._id.toString() !== videoId);
-        oldVideoObj["videos"] = filteredVideos;
-        const resData = await VideoModel.replaceOne({ outlineId: outlineId }, oldVideoObj);
+        let resData;
+        if(oldVideoObj.videos.length === 1){
+            resData = await VideoModel.deleteOne({ outlineId: outlineId });
+        }else{
+            const filteredVideos = oldVideoObj.videos.filter(video => video._id.toString() !== videoId);
+            oldVideoObj["videos"] = filteredVideos;
+            resData = await VideoModel.replaceOne({ outlineId: outlineId }, oldVideoObj);
+        }
 
         return res.status(200).json({
             message: "video deleted successfully",

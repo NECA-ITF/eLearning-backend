@@ -11,6 +11,16 @@ const imgStorage = multer.diskStorage({
 });
 const uploadImg = multer({ storage: imgStorage })
 
+const videoStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'src/assets/videos/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname )
+  }
+});
+const uploadVideo = multer({ storage: videoStorage })
+
 
 const { 
     handleNewCourse, 
@@ -28,7 +38,7 @@ const {
 
 route.post("/course", uploadImg.single('file'), handleNewCourse)
 route.post("/outlines", handleNewOutline)
-route.post("/videos", handleNewVideos)
+route.post("/videos", uploadVideo.single('file'), handleNewVideos)
 
 route.get("/courses", handleGetCourses)
 route.get("/outlines/:courseId", handleGetOutlines)
