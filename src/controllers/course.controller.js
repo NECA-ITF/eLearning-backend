@@ -291,15 +291,20 @@ try {
         });
     }
 
-    const filterdOutlines = outlines.filter((outline) =>
+    let deletedOutline;
+    if(outlines.length === 1){
+        deletedOutline = await OutlineModel.deleteOne({courseId:courseId})
+    }else{
+        const filterdOutlines = outlines.filter((outline) =>
         outline._id.toString() !== outlineId
-    )
+        )
 
-    const deletedOutline = await OutlineModel.replaceOne({courseId:courseId},
-        {
-            courseId:courseId,
-            outlines:filterdOutlines
-        })
+       deletedOutline = await OutlineModel.replaceOne({courseId:courseId},
+            {
+                courseId:courseId,
+                outlines:filterdOutlines
+            })
+    }
 
     return res.status(200).json({
         success: true,
@@ -330,11 +335,14 @@ const { outlineId, videoId } = req.body;
                 statusCode: 404
             });
         }
-
-
-        const filteredVideos = oldVideoObj.videos.filter(video => video._id.toString() !== videoId);
-        oldVideoObj["videos"] = filteredVideos;
-        const resData = await VideoModel.replaceOne({ outlineId: outlineId }, oldVideoObj);
+        let resData;
+        if(oldVideoObj.videos.length === 1){
+            resData = await VideoModel.deleteOne({ outlineId: outlineId });
+        }else{
+            const filteredVideos = oldVideoObj.videos.filter(video => video._id.toString() !== videoId);
+            oldVideoObj["videos"] = filteredVideos;
+            resData = await VideoModel.replaceOne({ outlineId: outlineId }, oldVideoObj);
+        }
 
         return res.status(200).json({
             message: "video deleted successfully",
