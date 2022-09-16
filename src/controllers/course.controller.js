@@ -102,15 +102,9 @@ try {
 async function handleNewVideos(req, res){
 try {
     const videoData = JSON.parse(req.body.videoData)
-    console.log(videoData)
-    console.log(req.file)
+    // console.log(videoData)
     // console.log(req.file)
-    videoData['videos'] = [
-        {
-            title: videoData.title,
-            url: `api/static/videos/${req.file.filename}`
-        }
-    ];
+    // console.log(req.file)
     // console.log(videoData)
 
 
@@ -127,22 +121,31 @@ if(!courseExists){
 
 const { outlines } = await OutlineModel.findOne({ courseId: courseId });
 const foundOutline = outlines.find(outline => outline._id.toString() === outlineId )
+// return console.log(foundOutline)
+const videosExist = await VideoModel.countDocuments({ outlineId: outlineId });
 let resData;
-if(!foundOutline){
-    
-    videoData["outlineTitle"] = foundOutline.title;
-    resData = new VideoModel(videoData);
-    resData = await resData.save();
-}else{
+if(videosExist){
     const videosObj = await VideoModel.findOne({ outlineId: outlineId });
         const { videos: oldVideos } = videosObj;
         const newVideos = oldVideos.push({
-            title: videoData.title,
+            title: newVideoTitle,
             url: `api/static/videos/${req.file.filename}`
         });
         videosObj["videos"] = newVideos;
 
         resData = await VideoModel.replaceOne({ outlineId: outlineId }, videosObj);
+}else{
+    videoData['videos'] = [
+        {
+            title: videoData.title,
+            url: `api/static/videos/${req.file.filename}`
+        }
+    ];
+    
+    videoData["outlineTitle"] = foundOutline.title;
+    resData = new VideoModel(videoData);
+    resData = await resData.save();
+    
 }
     res.status(201).json({
         success: true,
@@ -151,7 +154,7 @@ if(!foundOutline){
         message:"Videos added successfully"
     })
 } catch (error) {
-    // console.log(error);
+    console.log(error);
     
     res.status(400).json({
         success: false,
