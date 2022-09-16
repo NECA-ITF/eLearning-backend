@@ -332,6 +332,7 @@ const { outlineId, videoId } = req.body;
         }
 
 
+        
         const filteredVideos = oldVideoObj.videos.filter(video => video._id.toString() !== videoId);
         oldVideoObj["videos"] = filteredVideos;
         const resData = await VideoModel.replaceOne({ outlineId: outlineId }, oldVideoObj);

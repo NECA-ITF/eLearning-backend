@@ -204,11 +204,18 @@ async function handleChangePassword(req,res){
 }
 
 
+async function handleDeleteUser(req, res) {
+    
+
+}
+
+
 module.exports = { 
     handleRegister, 
     handleLogin,
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword,
-    handleChangePassword
+    handleChangePassword,
+    handleDeleteUser
 };
