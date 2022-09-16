@@ -220,7 +220,7 @@ try {
         message:"Videos gotten successfully",
     })
 } catch (error) {
-    console.log(error)
+    // console.log(error)
     res.status(400).json({
         success:false,
     message: "seems we can't find what you are looking for",
@@ -257,6 +257,7 @@ async function handleDeleteCourse(req, res) {
         return res.status(200).json({
             message: "course deleted successfully",
             deletedCourse,
+            success: true,
             statusCode: 200
         });
 
