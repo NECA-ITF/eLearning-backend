@@ -204,11 +204,45 @@ async function handleChangePassword(req,res){
 }
 
 
+async function handleDeleteUser(req, res) {
+    try{
+        const {userId: id} = req.body
+
+        const user = await UserModel.countDocuments({_id: id});
+        if(!user){
+            return res.status(404).json({
+                message: "user not found",
+                success: false,
+                statusCode: 404
+            });
+        }
+        const deletedUser = await UserModel.deleteOne({_id: id });
+
+    return res.status(200).json({
+        message: "user deleted successfully",
+        deletedUser,
+        success: true,
+        statusCode: 200
+    });
+    
+}    catch (error) {
+    console.log(error)
+    res.status(400).json({
+    success: false,
+    message: "something went wrong",
+    statusCode: 400
+    })
+}
+
+}
+
+
 module.exports = { 
     handleRegister, 
     handleLogin,
     handleGetUsers,
     handleUpdateProfile,
     handleForgottenPassword,
-    handleChangePassword
+    handleChangePassword,
+    handleDeleteUser
 };
