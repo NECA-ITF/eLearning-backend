@@ -28,7 +28,8 @@ const {
     handleNewVideos, 
     handleGetCourses, 
     handleGetOutlines, 
-    handleGetVideos, 
+    handleGetVideos,
+    handleAllGetVideos, 
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo,
@@ -43,6 +44,7 @@ route.post("/videos", uploadVideo.single('file'), handleNewVideos)
 route.get("/courses", handleGetCourses)
 route.get("/outlines/:courseId", handleGetOutlines)
 route.get("/videos/:outlineId", handleGetVideos)
+route.get("/allvideos/:courseId", handleAllGetVideos)
 
 route.delete("/course", handleDeleteCourse)
 route.delete("/outline", handleDeleteOutline)

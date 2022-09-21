@@ -248,6 +248,43 @@ const resData = await VideoModel.findOne({ outlineId: outlineId })
 }
 }
 
+async function handleAllGetVideos(req, res) {
+    const { courseId } = req.params;
+    try {
+    
+    const videosExist = await VideoModel.countDocuments({ courseId: courseId });
+
+if(!videosExist){
+    return res.status(404).json({
+        message: "course not found",
+        success: false,
+        statusCode: 404
+    });
+}
+
+    const resData = await VideoModel.find({ courseId: courseId })
+   
+    const allData=[]
+    resData.forEach((item)=>{
+        allData.push({outlineTitle:item.outlineTitle,videos:[...item.videos]})
+    })
+
+    res.status(200).json({
+        success: true,
+        allData,
+        statusCode: 200,
+        message:"Videos gotten successfully",
+    })
+} catch (error) {
+    // console.log(error)
+    res.status(400).json({
+        success:false,
+    message: "seems we can't find what you are looking for",
+    statusCode: 400
+})
+}
+}
+
 async function handleDeleteCourse(req, res) {
     try{
         const { courseId } = req.body;
@@ -478,6 +515,7 @@ module.exports = {
     handleGetCourses, 
     handleGetOutlines, 
     handleGetVideos,
+    handleAllGetVideos,
     handleDeleteCourse,
     handleDeleteOutline, 
     handleDeleteVideo,
