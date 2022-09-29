@@ -7,6 +7,10 @@ const outlineSchema = new Schema({
         required: true,
         unique: true
     },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
     outlines:[
         {  
             title: {

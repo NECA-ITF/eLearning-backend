@@ -25,6 +25,7 @@ const courseSchema = new Schema({
       type: String
     },
     requirements: [String],
+    externalLinks: [String],
     rating: String
   }, { timestamps: true });
   

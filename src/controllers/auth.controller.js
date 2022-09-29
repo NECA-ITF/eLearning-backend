@@ -63,7 +63,7 @@ async function handleLogin(req, res){
 
 async function handleGetUsers(req, res) {
     try{
-        const users = await UserModel.find()
+        const users = await UserModel.find({isDeleted: false})
         return res.status(200).json({
             message: "Successful!",
             success: true,
@@ -208,15 +208,18 @@ async function handleDeleteUser(req, res) {
     try{
         const {userId: id} = req.body
 
-        const user = await UserModel.countDocuments({_id: id});
-        if(!user){
+        let userExists = await UserModel.countDocuments({_id: id});
+        if(!userExists){
             return res.status(404).json({
                 message: "user not found",
                 success: false,
                 statusCode: 404
             });
         }
-        const deletedUser = await UserModel.deleteOne({_id: id });
+        const user = await UserModel.findOne({_id: id});
+        user["isDeleted"] = true;
+        // return console.log(user)
+        const deletedUser = await UserModel.replaceOne({_id: id }, user);
 
     return res.status(200).json({
         message: "user deleted successfully",
