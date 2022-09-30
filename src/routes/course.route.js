@@ -48,7 +48,7 @@ route.get("/courses", handleGetCourses)
 route.get("/outlines/:courseId", handleGetOutlines)
 route.get("/videos/:outlineId", handleGetVideos)
 route.get("/allvideos/:courseId", handleAllGetVideos)
-route.get("/history/:userId/:courseId", handleGetCourseHistory)
+route.get("/history/course/:userId/:courseId", handleGetCourseHistory)
 
 route.delete("/course", handleDeleteCourse)
 route.delete("/outline", handleDeleteOutline)

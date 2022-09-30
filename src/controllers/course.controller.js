@@ -52,6 +52,11 @@ async function handleGetCourseHistory(req, res){
 
     }catch(err){
         console.log(err);
+        return res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "something went wrong"
+        })
     }
 }
 async function handleUpdateCourseHistory(req, res){
@@ -104,7 +109,15 @@ async function handleUpdateCourseHistory(req, res){
         
         const prevCourseHistory = await HistoryModel.findOne({ userId: userId, courseId: courseId });
         const { watchedVideos } = prevCourseHistory;
-        watchedVideos.push(videoId);
+        if(!(watchedVideos.find((oldVideoId) => oldVideoId === videoId))){
+            watchedVideos.push(videoId);
+        }else{
+            return res.status(409).json({
+                success: false,
+                statusCode: 409,
+                message: "video history already exists"
+            })
+        }
         prevCourseHistory["watchedVideos"] = watchedVideos;
         // return console.log(prevCourseHistory);
         let courseHistory = await HistoryModel.replaceOne({ userId: userId, courseId: courseId }, prevCourseHistory);
@@ -115,9 +128,14 @@ async function handleUpdateCourseHistory(req, res){
             statusCode: 201,
             message: "course history updated successfully"
         })
-
+        
     }catch(err){
-        console.log(err);
+        // console.log(err);
+        return res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: "something went wrong"
+        })
     }
 
 }
