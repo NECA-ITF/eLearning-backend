@@ -123,73 +123,33 @@ async function handleUpdateProfile(req,res){
     
 }
 
-
-async function handleForgottenPassword(req,res){
-    try {    
-        const {email, password: newPassword} = req.body
-        const userExists = await UserModel.countDocuments({email: email});
-
-        if(!userExists){
-            return res.status(400).json({
-                message: "User does not exists",
-                success: false,
-                statusCode: 409
-            });
-        }
-
-        const user = await UserModel.findOne({email: email});
-        const newUserObject = user;
-         newUserObject["password"] = newPassword;
-
-         const forgottenPassword = await UserModel.replaceOne({email: email }, newUserObject);
-         
-         const updatedUser = await UserModel.findOne({email: email});
-
-
-         return res.status(200).json({
-             message:"password changed successfully ",
-             success:true,
-             updatedUser,
-             statusCode:200 
-         }); 
-    }
-    catch (error) {
-    
-        return res.status(404).json({
-            message: "something went wrong",
-            error,
-            success: false,
-            statusCode: 404
-        });
-    }
-}
-
 async function handleChangePassword(req,res){
-        try{
-            const {userId, oldPassword, newPassword} = req.body
-            const user = await UserModel.findOne({_id: userId});
-
-            if(user.password !== oldPassword){
-                return res.status(400).json({
-                    message: "wrong old password",
-                    success: false,
-                    statusCode: 400
-                });
-        }
-
-        const newUserObject = user
-        newUserObject["password"] = newPassword
-        await UserModel.replaceOne({_id: userId }, newUserObject);
-
-        const updatedUser = await UserModel.findOne({_id: userId});
-
-
-        return res.status(200).json({
-            message:"password changed successfully ",
-            success:true,
-            updatedUser,
-            statusCode:200 
-        }); 
+    try{
+        
+        const {userId, oldPassword, newPassword} = req.body;
+        const user = await UserModel.findOne({_id: userId});
+        const salt = await bcrypt.genSalt();
+        user.password = await bcrypt.hash(user.password, salt);
+        const auth = await bcrypt.compare(oldPassword, user.password);
+        if(auth){
+            return res.status(400).json({
+                message: "wrong old password",
+                user,
+                success: false,
+                statusCode: 400
+            });
+    }
+    const newUserObject = user
+    user.password = await bcrypt.hash(user.password, salt);
+    newUserObject["password"] = user.password;
+    await UserModel.replaceOne({_id: userId }, newUserObject);
+    const updatedUser = await UserModel.findOne({_id: userId});
+    return res.status(200).json({
+        message:"password changed successfully ",
+        success:true,
+        updatedUser,
+        statusCode:200 
+    }); 
         
 
     } catch (error) {
@@ -202,7 +162,6 @@ async function handleChangePassword(req,res){
         });
     }
 }
-
 
 async function handleDeleteUser(req, res) {
     try{
