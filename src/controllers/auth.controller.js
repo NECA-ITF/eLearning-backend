@@ -164,43 +164,59 @@ async function handleForgottenPassword(req,res){
     }
 }
 
+
 async function handleChangePassword(req,res){
-        try{
-            const {userId, oldPassword, newPassword} = req.body
-            const user = await UserModel.findOne({_id: userId});
-
-            if(user.password !== oldPassword){
-                return res.status(400).json({
-                    message: "wrong old password",
-                    success: false,
-                    statusCode: 400
-                });
-        }
-
-        const newUserObject = user
-        newUserObject["password"] = newPassword
-        await UserModel.replaceOne({_id: userId }, newUserObject);
-
-        const updatedUser = await UserModel.findOne({_id: userId});
-
-
-        return res.status(200).json({
-            message:"password changed successfully ",
-            success:true,
-            updatedUser,
-            statusCode:200 
-        }); 
+    try{
         
 
-    } catch (error) {
-        console.log(error)
-        return res.status(404).json({
-            message: "something went wrong",
-            success: false,
-            statusCode: 404,
-            error:error
-        });
+        const {userId, oldPassword, newPassword} = req.body;
+        const user = await UserModel.findOne({_id: userId});
+
+        const salt = await bcrypt.genSalt();
+
+        user.password = await bcrypt.hash(user.password, salt);
+
+        const auth = await bcrypt.compare(oldPassword, user.password);
+
+        if(auth){
+            return res.status(400).json({
+                message: "wrong old password",
+                user,
+                success: false,
+                statusCode: 400
+            });
     }
+
+
+    const newUserObject = user
+
+    user.password = await bcrypt.hash(user.password, salt);
+
+    newUserObject["password"] = user.password;
+
+
+    await UserModel.replaceOne({_id: userId }, newUserObject);
+
+    const updatedUser = await UserModel.findOne({_id: userId});
+
+
+    return res.status(200).json({
+        message:"password changed successfully ",
+        success:true,
+        updatedUser,
+        statusCode:200 
+    }); 
+    
+
+} catch (error) {
+    console.log(error)
+    return res.status(404).json({
+        message: "something went wrong",
+        success: false,
+        statusCode: 404,
+        error:error
+    });
+}
 }
 
 
