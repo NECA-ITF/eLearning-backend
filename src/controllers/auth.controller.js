@@ -164,7 +164,9 @@ async function handleForgottenPassword(req,res){
     }
 }
 
+
 async function handleChangePassword(req,res){
+
         try{
             const {userId, oldPassword, newPassword} = req.body
             const user = await UserModel.findOne({_id: userId});
@@ -197,17 +199,17 @@ async function handleChangePassword(req,res){
             updatedUser,
             statusCode:200 
         }); 
-        
 
-    } catch (error) {
-        console.log(error)
-        return res.status(404).json({
-            message: "something went wrong",
-            success: false,
-            statusCode: 404,
-            error:error
-        });
-    }
+
+} catch (error) {
+    console.log(error)
+    return res.status(404).json({
+        message: "something went wrong",
+        success: false,
+        statusCode: 404,
+        error:error
+    });
+}
 }
 
 
