@@ -1,6 +1,6 @@
 const userModel = require("../model/user.model");
 const UserModel = require("../model/user.model");
-
+const bcrypt = require('bcrypt')
 
 async function handleRegister(req, res){
     const data = req.body;
@@ -164,21 +164,30 @@ async function handleForgottenPassword(req,res){
     }
 }
 
+
 async function handleChangePassword(req,res){
+
         try{
             const {userId, oldPassword, newPassword} = req.body
             const user = await UserModel.findOne({_id: userId});
+    
+            const auth = await bcrypt.compare(oldPassword, user.password);
 
-            if(user.password !== oldPassword){
+
+            if(!auth){
                 return res.status(400).json({
                     message: "wrong old password",
+                    user,
                     success: false,
                     statusCode: 400
                 });
         }
 
         const newUserObject = user
-        newUserObject["password"] = newPassword
+        const salt = await bcrypt.genSalt();
+        
+        newUserObject["password"] = await bcrypt.hash(newPassword, salt);
+
         await UserModel.replaceOne({_id: userId }, newUserObject);
 
         const updatedUser = await UserModel.findOne({_id: userId});
@@ -190,17 +199,17 @@ async function handleChangePassword(req,res){
             updatedUser,
             statusCode:200 
         }); 
-        
 
-    } catch (error) {
-        console.log(error)
-        return res.status(404).json({
-            message: "something went wrong",
-            success: false,
-            statusCode: 404,
-            error:error
-        });
-    }
+
+} catch (error) {
+    console.log(error)
+    return res.status(404).json({
+        message: "something went wrong",
+        success: false,
+        statusCode: 404,
+        error:error
+    });
+}
 }
 
 

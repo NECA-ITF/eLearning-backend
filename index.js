@@ -17,7 +17,7 @@ app.use('/api', messageRoute)
 app.use(express.static(process.env.PWD + '/assets'))
 
 app.get('/',(req,res)=>{
-    res.send('HELLO WELCOME TO THE E-LEARNING APP BACKEND')
+    res.send('HELLO WELCOME TO THE E-LEARNING APP BACKEND, thanks for coming')
 })
 
 
