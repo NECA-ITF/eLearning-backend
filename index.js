@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const AppRoute =  require('./src/routes/app.route');
 const authRoute = require('./src/routes/auth.route');
 const courseRoute = require('./src/routes/course.route');
+const messageRoute = require('./src/routes/message.route');
 
 
 app.use(express.json());
@@ -12,6 +13,7 @@ app.use(cors());
 app.use('/api', AppRoute);
 app.use('/auth', authRoute)
 app.use('/api', courseRoute)
+app.use('/api', messageRoute)
 app.use(express.static(process.env.PWD + '/assets'))
 
 app.get('/',(req,res)=>{
