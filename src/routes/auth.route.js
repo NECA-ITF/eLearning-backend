@@ -17,7 +17,7 @@ route.post("/user/login", handleLogin);
 
 route.put("/user/updateprofile/:id", handleUpdateProfile);
 route.put("/forgottenpassword", handleForgottenPassword)
-route.put("/changedPassword", handleChangePassword)
+route.put("/changePassword", handleChangePassword)
 route.get("/users", handleGetUsers);
 route.delete("/user", handleDeleteUser);
 
