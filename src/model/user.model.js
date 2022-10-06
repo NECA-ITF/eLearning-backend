@@ -23,6 +23,14 @@ const userSchema = new Schema({
         type: String,
         requried: true,
     },
+    securityQuestion: {
+        type: String,
+        requried: true,
+    },
+    answer: {
+        type: String,
+        requried: true,
+    },
     isAdmin: {
         type: Boolean,
         default: false

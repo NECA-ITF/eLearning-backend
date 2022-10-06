@@ -126,8 +126,12 @@ async function handleUpdateProfile(req,res){
 
 async function handleForgottenPassword(req,res){
     try {    
-        const {email, password: newPassword} = req.body
+        const {email, securityQuestion, answer, newPassword} = req.body
         const userExists = await UserModel.countDocuments({email: email});
+        const secureQuest = await userModel.findOne({securityQuestion: securityQuestion})
+        const secureAns = await userModel.findOne({answer: answer})
+        
+        if (secureAns){
 
         if(!userExists){
             return res.status(400).json({
@@ -139,7 +143,9 @@ async function handleForgottenPassword(req,res){
 
         const user = await UserModel.findOne({email: email});
         const newUserObject = user;
-         newUserObject["password"] = newPassword;
+        const salt = await bcrypt.genSalt();
+        
+        newUserObject["password"] = await bcrypt.hash(newPassword, salt);
 
          const forgottenPassword = await UserModel.replaceOne({email: email }, newUserObject);
          
@@ -152,11 +158,59 @@ async function handleForgottenPassword(req,res){
              updatedUser,
              statusCode:200 
          }); 
+        }
+
+        return res.status(400).json({
+            message:"Incorrect answer",
+            success: false,
+            updatedUser,
+            statusCode:400 
+        }); 
+        
     }
     catch (error) {
     
         return res.status(404).json({
-            message: "something went wrong",
+            message: "Incorrect answer",
+            error,
+            success: false,
+            statusCode: 404
+        });
+    }
+}
+
+
+async function handleValidateEmail(req,res){
+    try {    
+        const {email} = req.body
+        
+        const userExists = await UserModel.countDocuments({email: email});
+
+        if(!userExists){
+            return res.status(400).json({
+                message: "User does not exists",
+                success: false,
+                statusCode: 409
+            });
+        }
+
+        const user = await UserModel.findOne({email: email});
+
+        const securityQuestion = user.securityQuestion
+
+    
+        
+         return res.status(200).json({
+             message:"security question gotten successfully ",
+             success:true,
+             securityQuestion,
+             statusCode:200 
+         }); 
+    }
+    catch (error) {
+    
+        return res.status(404).json({
+            message: "Incorrect answer",
             error,
             success: false,
             statusCode: 404
@@ -256,5 +310,6 @@ module.exports = {
     handleUpdateProfile,
     handleForgottenPassword,
     handleChangePassword,
-    handleDeleteUser
+    handleDeleteUser,
+    handleValidateEmail
 };
