@@ -23,13 +23,23 @@ const userSchema = new Schema({
         type: String,
         requried: true,
     },
+    securityQuestion: {
+        type: String,
+        requried: true
+    },
+    answer: {
+        type: String,
+        requried: true,
+        requried: true
+    },
     isAdmin: {
         type: Boolean,
         default: false
     },
     isDeleted: {
         type: Boolean,
-        default: false
+        default: false,
+        requried: true
     }
 })
 
