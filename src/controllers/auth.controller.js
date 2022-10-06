@@ -126,13 +126,8 @@ async function handleUpdateProfile(req,res){
 
 async function handleForgottenPassword(req,res){
     try {    
-        const {email, securityQuestion, answer, newPassword} = req.body
+        const {email, answer, newPassword} = req.body
         const userExists = await UserModel.countDocuments({email: email});
-        const secureQuest = await userModel.findOne({securityQuestion: securityQuestion})
-        const secureAns = await userModel.findOne({answer: answer})
-        
-        if (secureAns){
-
         if(!userExists){
             return res.status(400).json({
                 message: "User does not exists",
@@ -140,8 +135,13 @@ async function handleForgottenPassword(req,res){
                 statusCode: 409
             });
         }
-
         const user = await UserModel.findOne({email: email});
+        // const secureQuest = await userModel.findOne({securityQuestion: securityQuestion})
+        const secureAns = user.answer.toLowerCase() === answer.toLowerCase();
+        
+        if (secureAns){
+
+
         const newUserObject = user;
         const salt = await bcrypt.genSalt();
         

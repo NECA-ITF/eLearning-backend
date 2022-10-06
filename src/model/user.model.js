@@ -25,11 +25,12 @@ const userSchema = new Schema({
     },
     securityQuestion: {
         type: String,
-        requried: true,
+        requried: true
     },
     answer: {
         type: String,
         requried: true,
+        requried: true
     },
     isAdmin: {
         type: Boolean,
@@ -37,7 +38,8 @@ const userSchema = new Schema({
     },
     isDeleted: {
         type: Boolean,
-        default: false
+        default: false,
+        requried: true
     }
 })
 
