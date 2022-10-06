@@ -18,7 +18,7 @@ const messageSchema = new Schema({
         type: String,
         required: true
     },
-    read: {
+    resolved: {
         type: Boolean,
         default: false
     }
